@@ -1,0 +1,60 @@
+# ===== Gradle =====
+.gradle/
+build/
+!gradle/wrapper/gradle-wrapper.jar
+!**/src/main/**/build/
+!**/src/test/**/build/
+!**/src/androidTest/**/build/
+
+# ===== Local configuration (KHÔNG commit — chứa API key, đường dẫn SDK) =====
+local.properties
+
+# ===== Android Studio / IntelliJ =====
+.idea/
+*.iml
+*.ipr
+*.iws
+.navigation/
+captures/
+.externalNativeBuild/
+.cxx/
+*.hprof
+
+# ===== Android build outputs =====
+*.apk
+*.aab
+*.ap_
+*.dex
+bin/
+gen/
+out/
+
+# ===== Keystore & signing (KHÔNG commit — bảo mật) =====
+*.jks
+*.keystore
+keystore.properties
+
+# ===== Firebase / Google Services (KHÔNG commit nếu chứa key thật) =====
+# Bỏ comment nếu google-services.json chứa thông tin nhạy cảm của bạn:
+# app/google-services.json
+
+# ===== macOS / Windows system files =====
+.DS_Store
+Thumbs.db
+
+# ===== Lint & test reports =====
+lint/intermediates/
+lint/generated/
+lint/outputs/
+lint/tmp/
+/app/release/
+
+# ===== Google Drive backup credentials (tính năng nâng cao) =====
+credentials.json
+token/
+
+# ===== Room schema exports (tùy chọn — có thể muốn commit để review migration) =====
+# app/schemas/
+
+# ===== KSP / KAPT generated =====
+**/build/generated/
