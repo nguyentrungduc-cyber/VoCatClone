@@ -1,32 +1,18 @@
 package com.vocatclone.app.data.local.entity
 
-import androidx.room.ColumnInfo
 import androidx.room.Entity
-import androidx.room.ForeignKey
 import androidx.room.PrimaryKey
 
 /**
- * Một từ vựng thuộc về một Bookcase.
+ * Một từ vựng — KHÔNG còn gắn cứng vào 1 Bookcase.
+ * Một từ có thể thuộc nhiều Bookcase cùng lúc (many-to-many), xem [WordBookcaseCrossRef].
  * Chứa đầy đủ thông tin cho tính năng "Quản lý từ vựng" (nhóm lõi, mục 1)
  * và "Theo dõi tiến độ học" (nhóm ôn tập, mục 9).
  */
-@Entity(
-    tableName = "words",
-    foreignKeys = [
-        ForeignKey(
-            entity = BookcaseEntity::class,
-            parentColumns = ["id"],
-            childColumns = ["bookcaseId"],
-            onDelete = ForeignKey.CASCADE
-        )
-    ]
-)
+@Entity(tableName = "words")
 data class WordEntity(
     @PrimaryKey(autoGenerate = true)
     val id: Long = 0,
-
-    @ColumnInfo(index = true)
-    val bookcaseId: Long,
 
     val term: String,           // Từ tiếng Anh
     val meaning: String,        // Nghĩa tiếng Việt
