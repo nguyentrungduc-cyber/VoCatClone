@@ -131,7 +131,9 @@ app/src/main/java/com/vocatclone/app/
 - `test:` thêm/sửa test
 
 ### Thành viên nhóm
-- Điền tên thành viên và vai trò tại đây
+- Nguyễn Minh Đức 23520313 
+- Trần Minh Đức 24520330 
+- Nguyễn Trung Đức 24520324 
 
 ## Giấy phép
 
