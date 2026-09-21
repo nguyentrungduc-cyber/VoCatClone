@@ -7,12 +7,11 @@ import androidx.room.RoomDatabase
 import com.vocatclone.app.data.local.dao.BookcaseDao
 import com.vocatclone.app.data.local.dao.WordDao
 import com.vocatclone.app.data.local.entity.BookcaseEntity
-import com.vocatclone.app.data.local.entity.WordBookcaseCrossRef
 import com.vocatclone.app.data.local.entity.WordEntity
 
 @Database(
-    entities = [BookcaseEntity::class, WordEntity::class, WordBookcaseCrossRef::class],
-    version = 2,
+    entities = [BookcaseEntity::class, WordEntity::class],
+    version = 1,
     exportSchema = true
 )
 abstract class AppDatabase : RoomDatabase() {
@@ -30,11 +29,7 @@ abstract class AppDatabase : RoomDatabase() {
                     context.applicationContext,
                     AppDatabase::class.java,
                     "vocatclone.db"
-                )
-                    // App chưa release chính thức nên chưa cần viết Migration thủ công;
-                    // nếu đã có data thật cần giữ, thay bằng addMigrations(MIGRATION_1_2)
-                    .fallbackToDestructiveMigration()
-                    .build()
+                ).build()
                 INSTANCE = instance
                 instance
             }
