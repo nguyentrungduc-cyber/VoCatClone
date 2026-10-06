@@ -30,4 +30,21 @@
     <string name="form_swap">Swap languages</string>
     <string name="form_submit_create">Create Vocabulary</string>
     <string name="form_submit_save">Save changes</string>
+    <!-- Màn hình danh sách từ của bộ từ vựng (Vocabulary Detail). Giao diện tiếng Anh như các màn khác. -->
+    <string name="detail_back">Back</string>
+    <string name="detail_filter">Sort and filter</string>
+    <string name="detail_add_word">Add word</string>
+    <string name="detail_search_hint">Search words</string>
+    <string name="detail_total">Total %1$d</string>
+    <string name="detail_empty_title">No words yet</string>
+    <string name="detail_empty_message">Tap + to add your first word.</string>
+    <string name="detail_no_results">No word matches your search.</string>
+    <string name="detail_speak">Pronounce word</string>
+    <string name="detail_mark_mastered">Mark as mastered</string>
+    <string name="detail_mark_not_mastered">Mark as not mastered</string>
+    <string name="detail_more_options">More options</string>
+    <string name="detail_menu_edit">Edit</string>
+    <string name="detail_menu_move">Move to another Vocabulary</string>
+    <string name="detail_menu_change_date">Change date and time</string>
+    <string name="detail_menu_delete">Delete</string>
 </resources>
