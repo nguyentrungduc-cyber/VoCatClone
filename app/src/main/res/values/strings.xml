@@ -47,4 +47,37 @@
     <string name="detail_menu_move">Move to another Vocabulary</string>
     <string name="detail_menu_change_date">Change date and time</string>
     <string name="detail_menu_delete">Delete</string>
+    <!-- Màn hình Thêm / Sửa từ vựng. Giao diện tiếng Anh như các màn khác. -->
+    <string name="wf_set_label">Vocabulary</string>
+    <string name="wf_back">Back</string>
+    <string name="wf_action_add">Add</string>
+    <string name="wf_action_save">Save</string>
+    <string name="wf_add_another">Add and keep adding</string>
+    <string name="wf_term_placeholder">Write the word (Required)</string>
+    <string name="wf_lookup">Look up meanings</string>
+    <string name="wf_looking_up">Looking up meanings...</string>
+    <string name="wf_suggestions_title">Suggested meanings</string>
+    <string name="wf_meaning_required">Write the meaning (Required)</string>
+    <string name="wf_meaning_optional">Write another meaning</string>
+    <string name="wf_meaning_remove">Remove meaning</string>
+    <string name="wf_meaning_add">Add another meaning</string>
+    <string name="wf_image_label">Image</string>
+    <string name="wf_image_add">Add a photo</string>
+    <string name="wf_image_remove">Remove photo</string>
+    <string name="wf_pronunciation_label">Pronunciation</string>
+    <string name="wf_pronunciation_hint">Write the pronunciation</string>
+    <string name="wf_pos_label">Part of speech</string>
+    <string name="wf_example_label">Example</string>
+    <string name="wf_example_hint">Write an example sentence</string>
+    <string name="wf_example_translation_label">Example translation</string>
+    <string name="wf_example_translation_hint">Write the translation</string>
+    <string name="wf_synonym_label">Synonym</string>
+    <string name="wf_synonym_hint">Write a synonym</string>
+    <string name="wf_description_label">Description</string>
+    <string name="wf_description_hint">Write the description</string>
+    <string name="wf_editor_settings">Editor Settings</string>
+    <string name="wf_dictionary">Dictionary</string>
+    <string name="wf_settings_title">Editor Settings</string>
+    <string name="wf_settings_hint">Choose which fields to show in the editor.</string>
+    <string name="wf_settings_done">Done</string>
 </resources>
