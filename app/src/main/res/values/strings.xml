@@ -80,4 +80,27 @@
     <string name="wf_settings_title">Editor Settings</string>
     <string name="wf_settings_hint">Choose which fields to show in the editor.</string>
     <string name="wf_settings_done">Done</string>
+    <!-- Màn hình xem chi tiết một từ vựng. Giao diện tiếng Anh như các màn khác. -->
+    <string name="wd_back">Back</string>
+    <string name="wd_edit">Edit word</string>
+    <string name="wd_more_options">More options</string>
+    <string name="wd_menu_move">Move to another Vocabulary</string>
+    <string name="wd_menu_change_date">Change date and time</string>
+    <string name="wd_menu_delete">Delete</string>
+    <string name="wd_image">Word image</string>
+    <string name="wd_speak">Pronounce word</string>
+    <string name="wd_mastered">Mastered</string>
+    <string name="wd_meanings">Meanings</string>
+    <string name="wd_example">Example</string>
+    <string name="wd_synonym">Synonym</string>
+    <string name="wd_description">Description</string>
+    <string name="wd_progress">Study progress</string>
+    <string name="wd_times_reviewed">Times reviewed</string>
+    <string name="wd_last_reviewed">Last reviewed</string>
+    <string name="wd_added">Added</string>
+    <string name="wd_never">Never</string>
+    <string name="wd_delete_title">Delete this word?</string>
+    <string name="wd_delete_message">\u201c%1$s\u201d and its meanings will be deleted. This cannot be undone.</string>
+    <string name="wd_delete_confirm">Delete</string>
+    <string name="wd_delete_cancel">Cancel</string>
 </resources>
