@@ -11,8 +11,8 @@ import kotlinx.coroutines.flow.Flow
 @Dao
 interface BookcaseDao {
 
-    @Query("SELECT * FROM bookcases ORDER BY createdAt DESC")
-    fun getAll(): Flow<List<BookcaseEntity>>
+    @Query("SELECT * FROM bookcases WHERE bookshelfId = :bookshelfId ORDER BY createdAt DESC")
+    fun getByBookshelf(bookshelfId: Long): Flow<List<BookcaseEntity>>
 
     @Query("SELECT * FROM bookcases WHERE id = :id")
     suspend fun getById(id: Long): BookcaseEntity?
