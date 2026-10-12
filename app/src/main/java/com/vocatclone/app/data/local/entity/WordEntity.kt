@@ -1,14 +1,14 @@
 package com.vocatclone.app.data.local.entity
 
-import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.ForeignKey
+import androidx.room.Index
 import androidx.room.PrimaryKey
 
 /**
- * Một từ vựng thuộc về một Bookcase.
- * Chứa đầy đủ thông tin cho tính năng "Quản lý từ vựng" (nhóm lõi, mục 1)
- * và "Theo dõi tiến độ học" (nhóm ôn tập, mục 9).
+ * Từ vựng — thuộc về đúng 1 Bookcase (quan hệ 1-n).
+ * KHÔNG có cột "meaning" — nghĩa tiếng Việt nằm ở [WordMeaningEntity]
+ * vì 1 từ có thể có nhiều nghĩa (vd: "cook" = đầu bếp / nấu / chín).
  */
 @Entity(
     tableName = "words",
@@ -19,22 +19,23 @@ import androidx.room.PrimaryKey
             childColumns = ["bookcaseId"],
             onDelete = ForeignKey.CASCADE
         )
-    ]
+    ],
+    indices = [Index("bookcaseId")]
 )
 data class WordEntity(
     @PrimaryKey(autoGenerate = true)
     val id: Long = 0,
-
-    @ColumnInfo(index = true)
     val bookcaseId: Long,
 
-    val term: String,           // Từ tiếng Anh
-    val meaning: String,        // Nghĩa tiếng Việt
-    val partOfSpeech: String? = null, // Loại từ: noun, verb, adjective...
-    val example: String? = null,      // Câu ví dụ
-    val imageUri: String? = null,     // Đường dẫn ảnh minh họa (tùy chọn)
+    val term: String,                   // Từ tiếng Anh, vd: "toothpaste"
+    val pronunciation: String? = null,  // IPA, vd: "/ˈtuːθ.peɪst/"
+    val partOfSpeech: String? = null,   // noun, verb, adjective...
+    val exampleEn: String? = null,      // Câu ví dụ nguyên văn (Anh)
+    val exampleVi: String? = null,      // Bản dịch câu ví dụ (Việt)
+    val synonym: String? = null,        // Từ đồng nghĩa
+    val description: String? = null,    // Định nghĩa tiếng Anh
+    val imageUri: String? = null,       // Đường dẫn ảnh minh họa
 
-    // Theo dõi tiến độ học (nhóm ôn tập, mục 9)
     val isMastered: Boolean = false,
     val lastReviewedAt: Long? = null,
     val reviewCount: Int = 0,
