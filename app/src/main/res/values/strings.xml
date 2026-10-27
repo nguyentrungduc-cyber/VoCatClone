@@ -108,4 +108,20 @@
     <string name="wa_delete_title">Delete this word?</string>
     <string name="wa_delete_message">\u201c%1$s\u201d and its meanings will be deleted. This cannot be undone.</string>
     <string name="wa_delete_confirm">Delete</string>
+    <!-- Quản lý Bookcase (tủ sách) và Vocabulary (bộ từ vựng) trên Home. Tên gọi theo giao diện VoCat gốc. -->
+    <string name="mg_new_shelf_title">New Bookcase</string>
+    <string name="mg_rename_shelf_title">Rename Bookcase</string>
+    <string name="mg_shelf_name_hint">Bookcase name</string>
+    <string name="mg_create">Create</string>
+    <string name="mg_save">Save</string>
+    <string name="mg_cancel">Cancel</string>
+    <string name="mg_edit">Edit</string>
+    <string name="mg_rename">Rename</string>
+    <string name="mg_delete">Delete</string>
+    <string name="mg_delete_shelf_title">Delete this Bookcase?</string>
+    <string name="mg_delete_shelf_message">\u201c%1$s\u201d and all its Vocabulary and words will be deleted. This cannot be undone.</string>
+    <string name="mg_delete_set_title">Delete this Vocabulary?</string>
+    <string name="mg_delete_set_message">\u201c%1$s\u201d and all its words will be deleted. This cannot be undone.</string>
+    <string name="mg_error_title">Could not save</string>
+    <string name="mg_ok">OK</string>
 </resources>
