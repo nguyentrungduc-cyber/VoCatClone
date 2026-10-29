@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "1077597221609",
+    "project_id": "vocat-clone-nhom18",
+    "storage_bucket": "vocat-clone-nhom18.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1077597221609:android:df5a794a699645822c3678",
+        "android_client_info": {
+          "package_name": "com.vocatclone.app"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBVg2Eflx7cE3K0B135GlBN_DS99bHZHkQ"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
