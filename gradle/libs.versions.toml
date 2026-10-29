@@ -10,6 +10,8 @@ navigationCompose = "2.8.3"
 room = "2.6.1"
 coroutines = "1.9.0"
 lifecycleViewmodelCompose = "2.8.6"
+googleServices = "4.5.0"
+firebaseBom = "35.1.0"
 junit = "4.13.2"
 androidxJunit = "1.2.1"
 espressoCore = "3.6.1"
@@ -35,6 +37,10 @@ androidx-room-compiler = { group = "androidx.room", name = "room-compiler", vers
 # Coroutines — xử lý bất đồng bộ (gọi API dịch, TTS, đọc/ghi DB)
 kotlinx-coroutines-android = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-android", version.ref = "coroutines" }
 
+# Firebase
+firebase-bom = { group = "com.google.firebase", name = "firebase-bom", version.ref = "firebaseBom" }
+firebase-auth = { group = "com.google.firebase", name = "firebase-auth" }
+
 # Testing
 junit = { group = "junit", name = "junit", version.ref = "junit" }
 androidx-junit = { group = "androidx.test.ext", name = "junit", version.ref = "androidxJunit" }
@@ -47,3 +53,4 @@ android-application = { id = "com.android.application", version.ref = "agp" }
 kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
 kotlin-compose = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "kotlin" }
 ksp = { id = "com.google.devtools.ksp", version.ref = "ksp" }
+google-services = { id = "com.google.gms.google-services", version.ref = "googleServices" }
