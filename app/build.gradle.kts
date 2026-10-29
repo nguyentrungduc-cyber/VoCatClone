@@ -66,6 +66,9 @@ dependencies {
     implementation(libs.androidx.room.ktx)
     ksp(libs.androidx.room.compiler)
 
+    // Material Icons Extended (Campaign, Palette, Group, Quiz, Pets, CalendarMonth, ...)
+    implementation("androidx.compose.material:material-icons-extended")
+
     // Firebase
     implementation(platform(libs.firebase.bom))
     implementation(libs.firebase.auth)
