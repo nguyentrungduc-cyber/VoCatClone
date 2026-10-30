@@ -20,12 +20,15 @@ Dự án là bài tập nhóm môn Lập trình Mobile, xây dựng bằng **Kot
 - [ ] Chế độ trắc nghiệm (Multiple choice)
 - [ ] Chế độ chính tả (Dictation — nghe và gõ lại từ)
 - [ ] Theo dõi tiến độ học (đánh dấu đã thuộc / chưa thuộc, lịch sử ôn tập)
+- [ ] Chế độ Blinker (quiz chớp nhoáng — từ xuất hiện/biến mất trong vài trăm ms, yêu cầu tối ưu hiệu năng UI real-time)
+- [ ] "Làm lại chỉ với các từ trả lời sai" sau mỗi lượt quiz (dùng chung cho mọi chế độ)
 
 ### Nhóm tính năng nâng cao (nếu kịp thời gian)
+- [ ] Đồng bộ dữ liệu đa thiết bị qua Firebase (merge theo từng từ, xử lý xung đột)
+- [ ] Import / Export danh sách từ vựng qua file CSV
 - [ ] Nhắc học qua Notification (AlarmManager)
 - [ ] Sao lưu / Khôi phục dữ liệu qua Google Drive
-- [ ] Đồng bộ dữ liệu đa thiết bị qua Firebase (merge theo từng từ)
-- [ ] Import / Export danh sách từ vựng qua file CSV
+- [ ] Hội thoại tiếng Anh theo kịch bản với LLM (Gemini API / OpenAI API)
 
 ## Công nghệ sử dụng
 
@@ -35,6 +38,8 @@ Dự án là bài tập nhóm môn Lập trình Mobile, xây dựng bằng **Kot
 | UI | Jetpack Compose |
 | Kiến trúc | MVVM |
 | Cơ sở dữ liệu cục bộ | Room (SQLite) |
+| Xác thực | Firebase Authentication |
+| Điều hướng | Navigation Compose |
 | Bất đồng bộ | Kotlin Coroutines / Flow |
 | Text-to-Speech | Android TTS Engine |
 | Build | Gradle (Kotlin DSL) |
@@ -50,7 +55,7 @@ Dự án là bài tập nhóm môn Lập trình Mobile, xây dựng bằng **Kot
 
 1. Clone repository:
    ```bash
-   git clone https://github.com/2nguyen3/VoCatClone.git
+   git clone https://github.com/nguyentrungduc-cyber/VoCatClone.git
    cd VoCatClone
    ```
 
@@ -80,6 +85,14 @@ Dự án là bài tập nhóm môn Lập trình Mobile, xây dựng bằng **Kot
    ./gradlew connectedAndroidTest
    ```
 
+### Firebase
+
+File `app/google-services.json` của project Firebase `vocat-clone-nhom18` đã có sẵn trong repo. Để đăng nhập chạy được trên máy của mình, thêm SHA-1 của debug keystore vào Firebase Console (Project settings → Your apps → Add fingerprint). Lấy SHA-1 bằng:
+
+```bash
+./gradlew signingReport
+```
+
 ### Cấu hình API (tùy chọn)
 
 Nếu dùng tính năng gợi ý nghĩa từ tự động, tạo file `local.properties` ở thư mục gốc (file này đã nằm trong `.gitignore`, không commit lên git):
@@ -100,20 +113,22 @@ DICTIONARY_API_KEY=your_api_key_here
 
 ```
 app/src/main/java/com/vocatclone/app/
+├── MainActivity.kt          # Entry point — Scaffold + thanh điều hướng dưới
 ├── data/
-│   ├── local/
-│   │   ├── entity/       # Room Entity (Word, Bookcase, ReviewLog...)
-│   │   └── dao/          # Room DAO interfaces
-│   └── repository/       # Repository pattern — nguồn dữ liệu duy nhất cho ViewModel
-├── domain/
-│   └── model/            # Model nghiệp vụ (tách khỏi Entity nếu cần)
-├── ui/
-│   ├── home/             # Màn hình danh sách bộ từ
-│   ├── vocabulary/       # Màn hình thêm/sửa/xem chi tiết từ
-│   ├── review/           # Các chế độ ôn tập (Flashcard, Quiz, Dictation)
-│   └── theme/            # Compose Theme, Color, Typography
-└── MainActivity.kt       # Entry point
+│   └── local/
+│       ├── AppDatabase.kt   # Room database (singleton)
+│       ├── entity/          # Bookshelf, Bookcase, Word, WordMeaning (+ WordWithMeanings)
+│       └── dao/             # BookshelfDao, BookcaseDao, WordDao
+└── ui/
+    ├── components/          # VoCatBottomBar (5 tab)
+    ├── home/                # Tab "Từ Vựng" — danh sách tủ sách / bộ từ
+    ├── profile/             # Tab "Của tôi"
+    └── theme/               # Color, Theme, Type
 ```
+
+Quan hệ dữ liệu: `bookshelves 1-n bookcases 1-n words 1-n word_meanings`. Không có bảng Users — người dùng được xác thực bằng Firebase Auth, dữ liệu lọc theo cột `firebaseUid` của bảng `bookshelves`.
+
+Dự kiến bổ sung: `data/repository/`, `ui/bookcase/`, `ui/word/`, `ui/quiz/`, `ui/settings/`.
 
 ## Đóng góp
 
