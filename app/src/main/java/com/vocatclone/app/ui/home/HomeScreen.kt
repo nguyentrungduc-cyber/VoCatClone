@@ -2,6 +2,7 @@ package com.vocatclone.app.ui.home
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.FloatingActionButton
@@ -34,7 +35,12 @@ fun HomeScreen(modifier: Modifier = Modifier) {
     // Placeholder state — sẽ thay bằng dữ liệu thật từ ViewModel/Room sau này
     var bookcaseCount by remember { mutableStateOf(0) }
 
+    // Scaffold này nằm TRONG Scaffold của MainApp (đã có bottomBar):
+    // - nhận modifier (chứa innerPadding) để FAB không bị thanh điều hướng dưới che mất
+    // - contentWindowInsets = 0 để không cộng thêm padding status/navigation bar lần thứ 2
     Scaffold(
+        modifier = modifier,
+        contentWindowInsets = WindowInsets(0, 0, 0, 0),
         floatingActionButton = {
             FloatingActionButton(onClick = { bookcaseCount++ }) {
                 Icon(Icons.Filled.Add, contentDescription = stringResource(R.string.add_bookcase))
@@ -42,7 +48,7 @@ fun HomeScreen(modifier: Modifier = Modifier) {
         }
     ) { padding ->
         Column(
-            modifier = modifier
+            modifier = Modifier
                 .fillMaxSize()
                 .padding(padding)
                 .padding(24.dp),
