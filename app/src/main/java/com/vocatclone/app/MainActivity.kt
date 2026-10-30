@@ -11,6 +11,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -32,14 +33,34 @@ class MainActivity : ComponentActivity() {
         Log.d("FirebaseTest", "currentUser = ${FirebaseAuth.getInstance().currentUser}")
         setContent {
             VoCatCloneTheme {
-                MainApp()
+                val auth = remember { FirebaseAuth.getInstance() }
+                // Lưu email vào state + lắng nghe AuthStateListener để UI tự cập nhật
+                // khi đăng nhập/đăng xuất (đọc thẳng auth.currentUser sẽ không recompose).
+                var userEmail by remember { mutableStateOf(auth.currentUser?.email) }
+                DisposableEffect(auth) {
+                    val listener = FirebaseAuth.AuthStateListener { userEmail = it.currentUser?.email }
+                    auth.addAuthStateListener(listener)
+                    onDispose { auth.removeAuthStateListener(listener) }
+                }
+
+                MainApp(
+                    userEmail = userEmail,
+                    onSignOut = { auth.signOut() }
+                )
             }
         }
     }
 }
 
+/**
+ * Khung chính của app. Không gọi Firebase trực tiếp — nhận dữ liệu/sự kiện từ ngoài
+ * (state hoisting) để Preview chạy được mà không cần khởi tạo Firebase.
+ */
 @Composable
-fun MainApp() {
+fun MainApp(
+    userEmail: String? = null,
+    onSignOut: () -> Unit = {}
+) {
     var selectedTab by remember { mutableStateOf(MainTab.VOCAB) }
 
     Scaffold(
@@ -51,8 +72,9 @@ fun MainApp() {
         when (selectedTab) {
             MainTab.VOCAB -> HomeScreen(modifier = Modifier.padding(innerPadding))
             MainTab.PROFILE -> ProfileScreen(
-                userEmail = FirebaseAuth.getInstance().currentUser?.email,
-                modifier = Modifier.padding(innerPadding)
+                userEmail = userEmail,
+                modifier = Modifier.padding(innerPadding),
+                onSignOutClick = onSignOut
             )
             else -> {
                 // Các tab chưa triển khai — placeholder
