@@ -1,0 +1,5 @@
+# Giữ đúng kiểu xuống dòng cho script Gradle khi làm việc trên cả Windows và macOS/Linux
+gradlew       text eol=lf
+*.bat         text eol=crlf
+*.jar         binary
+*.png         binary
