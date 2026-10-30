@@ -13,10 +13,10 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 
 /**
  * Nối [WordDetailViewModel] vào [WordDetailScreen]: xem đầy đủ một từ (tự cập nhật khi từ đổi) và xóa từ
- * (menu ba chấm, đã có hộp thoại xác nhận trong giao diện).
+ * và các thao tác trong menu ba chấm (đã có hộp thoại xác nhận trong giao diện).
  *
  * @param onEdit mở form sửa; truyền id bộ từ vựng đang chứa từ.
- * Chuyển bộ, đổi ngày giờ và đánh dấu đã thuộc được nối ở các PR sau.
+ * Chuyển sang bộ khác và đổi ngày giờ đã nối. Đánh dấu đã thuộc chưa nối (thuộc task riêng).
  */
 @Composable
 fun WordDetailRoute(
@@ -43,7 +43,11 @@ fun WordDetailRoute(
             word = word,
             modifier = modifier,
             onBack = onBack,
+            currentBookcaseId = state.bookcaseId,
+            moveTargets = state.moveTargets,
             onEdit = { onEdit(state.bookcaseId) },
+            onMove = viewModel::move,
+            onChangeDateTime = viewModel::changeDateTime,
             onDelete = viewModel::delete
         )
     }
