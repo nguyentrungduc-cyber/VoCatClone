@@ -44,7 +44,7 @@ private const val KEY_SEEN_WELCOME = "seen_welcome"
  * - Chưa đăng nhập thì sau Splash/Welcome vào LOGIN; đăng nhập hoặc đăng ký xong vào MAIN (Home)
  *   và xóa các màn đăng nhập khỏi back stack, nên bấm Back ở Home không quay lại màn Login.
  * - Đăng xuất thì về LOGIN và xóa toàn bộ back stack.
- * - Các route có tham số xem ở [Routes]. Route nào chưa có màn nối dữ liệu thì dùng [PlaceholderScreen].
+ * - Các route có tham số xem ở [Routes]; mỗi route nối ViewModel vào màn tương ứng qua một `...Route`.
  */
 @Composable
 fun AppNavHost(
@@ -147,7 +147,7 @@ fun AppNavHost(
             )
         }
 
-        // ---- Các route có tham số: chưa nối dữ liệu, dùng màn tạm ----
+        // ---- Các route có tham số ----
 
         composable(
             route = Routes.BOOKCASE_DETAIL,
