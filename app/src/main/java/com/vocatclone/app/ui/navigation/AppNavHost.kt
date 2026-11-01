@@ -24,6 +24,7 @@ import com.vocatclone.app.MainApp
 import com.vocatclone.app.ui.auth.AuthViewModel
 import com.vocatclone.app.ui.auth.LoginScreen
 import com.vocatclone.app.ui.auth.RegisterScreen
+import com.vocatclone.app.ui.bookcase.BookcaseDetailRoute
 import com.vocatclone.app.ui.bookcase.BookcaseFormRoute
 import com.vocatclone.app.ui.home.HomeRoute
 import com.vocatclone.app.ui.splash.SplashScreen
@@ -151,7 +152,12 @@ fun AppNavHost(
             arguments = listOf(navArgument(Routes.ARG_BOOKCASE_ID) { type = NavType.LongType })
         ) { entry ->
             val id = entry.arguments?.getLong(Routes.ARG_BOOKCASE_ID) ?: NO_ID
-            PlaceholderScreen("Chi tiết bộ từ vựng", "bookcaseId = $id", onBack = { navController.popBackStack() })
+            BookcaseDetailRoute(
+                bookcaseId = id,
+                onBack = { navController.popBackStack() },
+                onAddWord = { bookcaseId -> navController.navigate(Routes.wordForm(bookcaseId)) },
+                onOpenWord = { wordId -> navController.navigate(Routes.wordDetail(wordId)) }
+            )
         }
 
         composable(
