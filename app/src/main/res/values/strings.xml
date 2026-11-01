@@ -124,4 +124,5 @@
     <string name="mg_delete_set_message">\u201c%1$s\u201d and all its words will be deleted. This cannot be undone.</string>
     <string name="mg_error_title">Could not save</string>
     <string name="mg_ok">OK</string>
+    <string name="wf_added">Word added</string>
 </resources>
