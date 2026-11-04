@@ -20,8 +20,10 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.vocatclone.app.R
+import com.vocatclone.app.ui.theme.VoCatCloneTheme
 
 /**
  * Màn hình chính — danh sách các bộ từ vựng (bookcase) của người dùng.
@@ -68,3 +70,12 @@ fun HomeScreen(modifier: Modifier = Modifier) {
         }
     }
 }
+
+@Preview(showBackground = true)
+@Composable
+private fun HomeScreenPreview() {
+    VoCatCloneTheme {
+        HomeScreen()
+    }
+}
+
