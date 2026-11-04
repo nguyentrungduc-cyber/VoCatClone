@@ -10,10 +10,21 @@ import androidx.compose.material3.lightColorScheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.platform.LocalContext
 
+// Theme "Xanh Đen": nền xanh đen thay vì đen thuần.
 private val DarkColorScheme = darkColorScheme(
-    primary = Purple80,
-    secondary = PurpleGrey80,
-    tertiary = Pink80
+    primary = NavyPrimary,
+    onPrimary = NavyOnPrimary,
+    secondary = NavySecondary,
+    onSecondary = NavyOnSecondary,
+    tertiary = NavyTertiary,
+    background = NavyBackground,
+    onBackground = NavyOnSurface,
+    surface = NavySurface,
+    onSurface = NavyOnSurface,
+    surfaceVariant = NavySurfaceVariant,
+    onSurfaceVariant = NavyOnSurfaceVariant,
+    outline = NavyOutline,
+    outlineVariant = NavyOutlineVariant
 )
 
 private val LightColorScheme = lightColorScheme(
@@ -24,9 +35,11 @@ private val LightColorScheme = lightColorScheme(
 
 @Composable
 fun VoCatCloneTheme(
-    darkTheme: Boolean = isSystemInDarkTheme(),
-    // Dynamic color khả dụng trên Android 12+
-    dynamicColor: Boolean = true,
+    // Mặc định luôn dùng theme Xanh Đen (giống VoCat gốc), không theo chế độ sáng/tối của hệ thống.
+    // Muốn theo hệ thống: đổi thành isSystemInDarkTheme().
+    darkTheme: Boolean = true,
+    // Tắt dynamic color: nếu bật, Android 12+ sẽ lấy màu theo hình nền và đè mất bảng màu Xanh Đen.
+    dynamicColor: Boolean = false,
     content: @Composable () -> Unit
 ) {
     val colorScheme = when {
