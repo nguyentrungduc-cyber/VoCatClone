@@ -27,7 +27,7 @@ import com.vocatclone.app.data.local.entity.WordMeaningEntity
         WordEntity::class,
         WordMeaningEntity::class
     ],
-    version = 2,
+    version = 3,
     exportSchema = true
 )
 abstract class AppDatabase : RoomDatabase() {
@@ -47,7 +47,7 @@ abstract class AppDatabase : RoomDatabase() {
                     AppDatabase::class.java,
                     "vocatclone.db"
                 )
-                    // Schema thay đổi nhiều (bỏ Users, thêm Bookshelves, WordMeanings).
+                    // Schema thay đổi nhiều (v2 -> v3: chuyển sourceLang/targetLang từ bookshelves sang bookcases).
                     // App chưa phát hành → xóa DB cũ và tạo lại.
                     // Trước khi release: bỏ dòng này, viết Migration thật.
                     .fallbackToDestructiveMigration()
