@@ -30,7 +30,6 @@ class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
-        Log.d("FirebaseTest", "currentUser = ${FirebaseAuth.getInstance().currentUser}")
         setContent {
             VoCatCloneTheme {
                 val auth = remember { FirebaseAuth.getInstance() }
