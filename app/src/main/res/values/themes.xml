@@ -1,6 +1,6 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
-    <!-- Nền cửa sổ xanh đen để lúc mở app không nháy trắng trước khi Compose vẽ. -->
-    <style name="Theme.VoCatClone" parent="android:Theme.Material.NoActionBar">
-        <item name="android:windowBackground">@color/navy_background</item>
+    <!-- Chế độ sáng. Nền cửa sổ khớp màu nền Compose để lúc mở app không bị nháy. -->
+    <style name="Theme.VoCatClone" parent="android:Theme.Material.Light.NoActionBar">
+        <item name="android:windowBackground">@color/light_background</item>
     </style>
 </resources>

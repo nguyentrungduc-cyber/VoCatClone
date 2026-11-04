@@ -23,3 +23,15 @@ val NavyOnPrimary = Color(0xFF00344A)
 val NavySecondary = Color(0xFFFFC857)        // vàng: tab đang chọn
 val NavyOnSecondary = Color(0xFF3A2A00)
 val NavyTertiary = Color(0xFFFF6FB5)         // hồng: ngôi sao "Đăng ký"
+
+// ===== Bản sáng của theme (nền trắng xanh nhạt, chữ xanh đen, màu nhấn đậm hơn để đủ tương phản) =====
+val LightBackground = Color(0xFFF7F9FC)
+val LightSurface = Color(0xFFFFFFFF)
+val LightSurfaceVariant = Color(0xFFE8EDF6)
+val LightOutline = Color(0xFFB6C2D6)
+val LightOutlineVariant = Color(0xFFDCE3EE)
+val LightOnSurface = Color(0xFF0B1220)        // chữ dùng lại đúng màu nền xanh đen
+val LightOnSurfaceVariant = Color(0xFF5A6A85)
+val LightPrimary = Color(0xFF0277BD)          // xanh đậm: chữ nhấn
+val LightSecondary = Color(0xFFC77C00)        // vàng cam đậm: tab đang chọn (vàng nhạt khó đọc trên nền trắng)
+val LightTertiary = Color(0xFFD6338A)         // hồng đậm: ngôi sao "Đăng ký"
