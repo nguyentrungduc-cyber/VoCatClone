@@ -20,6 +20,17 @@
             </intent-filter>
         </activity>
 
+        <!-- Màn Đăng nhập / Đăng ký (mở từ tab "Của tôi"). adjustResize để bàn phím không che form. -->
+        <activity
+            android:name=".ui.auth.LoginActivity"
+            android:exported="false"
+            android:windowSoftInputMode="adjustResize" />
+
+        <activity
+            android:name=".ui.auth.RegisterActivity"
+            android:exported="false"
+            android:windowSoftInputMode="adjustResize" />
+
     </application>
 
 </manifest>

@@ -74,14 +74,11 @@ fun HomeScreen(modifier: Modifier = Modifier) {
     }
 }
 
-// 1. Xem trước giao diện khi bộ sưu tập trống trơn
+// Xem trước giao diện khi bộ sưu tập trống trơn
 @Preview(showBackground = true, name = "Màn hình Trống (0 tủ sách)")
 @Composable
 fun HomeScreenEmptyPreview() {
     VoCatCloneTheme {
-        // Truyền thẳng số 0 vào làm dữ liệu giả
         HomeScreen()
     }
 }
-
-
