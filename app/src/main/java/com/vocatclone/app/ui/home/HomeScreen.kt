@@ -20,8 +20,10 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.vocatclone.app.R
+import com.vocatclone.app.ui.theme.VoCatCloneTheme
 
 /**
  * Màn hình chính — danh sách các bộ từ vựng (bookcase) của người dùng.
@@ -34,6 +36,9 @@ import com.vocatclone.app.R
 fun HomeScreen(modifier: Modifier = Modifier) {
     // Placeholder state — sẽ thay bằng dữ liệu thật từ ViewModel/Room sau này
     var bookcaseCount by remember { mutableStateOf(0) }
+    // mutableStateOf giup thong bao den Composable moi khi gia tri thay doi thi cap nhat lai UI
+    // remember giup giu gia tri cu khi reset UI (khong bi lap lai)
+    // by giup rut gon cau thay vi var boo... = rem... sau do lai boo...value +=1
 
     // Scaffold này nằm TRONG Scaffold của MainApp (đã có bottomBar):
     // - nhận modifier (chứa innerPadding) để FAB không bị thanh điều hướng dưới che mất
@@ -66,5 +71,14 @@ fun HomeScreen(modifier: Modifier = Modifier) {
                 )
             }
         }
+    }
+}
+
+// Xem trước giao diện khi bộ sưu tập trống trơn
+@Preview(showBackground = true, name = "Màn hình Trống (0 tủ sách)")
+@Composable
+fun HomeScreenEmptyPreview() {
+    VoCatCloneTheme {
+        HomeScreen()
     }
 }

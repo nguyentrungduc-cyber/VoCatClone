@@ -1,0 +1,6 @@
+<resources xmlns:tools="http://schemas.android.com/tools">
+    <!-- Chế độ tối (Xanh Đen). -->
+    <style name="Theme.VoCatClone" parent="android:Theme.Material.NoActionBar">
+        <item name="android:windowBackground">@color/navy_background</item>
+    </style>
+</resources>
