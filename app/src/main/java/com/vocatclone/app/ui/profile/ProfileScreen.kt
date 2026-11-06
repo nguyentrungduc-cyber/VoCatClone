@@ -29,6 +29,7 @@ import androidx.compose.material.icons.filled.Group
 import androidx.compose.material.icons.filled.Notifications
 import androidx.compose.material.icons.filled.Palette
 import androidx.compose.material.icons.filled.Person
+import androidx.compose.material.icons.filled.PersonAdd
 import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material.icons.filled.Star
 import androidx.compose.material3.CenterAlignedTopAppBar
@@ -76,6 +77,7 @@ fun ProfileScreen(
     onSettingsClick: () -> Unit = {},
     onBackupClick: () -> Unit = {},
     onAccountClick: () -> Unit = {},
+    onRegisterClick: () -> Unit = {},
     onUpgradeClick: () -> Unit = {},
     onNotificationClick: () -> Unit = {},
     onThemeClick: () -> Unit = {},
@@ -124,9 +126,19 @@ fun ProfileScreen(
                 value = userEmail ?: "Yêu cầu đăng nhập",
                 onClick = onAccountClick
             )
+            // Chỉ hiện khi chưa đăng nhập → mở RegisterActivity.
+            if (userEmail == null) {
+                ProfileRow(
+                    icon = Icons.Filled.PersonAdd,
+                    title = "Đăng ký tài khoản",
+                    value = "",
+                    onClick = onRegisterClick
+                )
+            }
+            // Dòng "Đăng ký" của app VoCat gốc là đăng ký GÓI TRẢ PHÍ, đổi tên để không nhầm với tạo tài khoản.
             ProfileRow(
                 icon = Icons.Filled.Star,
-                title = "Đăng ký",
+                title = "Gói Premium",
                 value = "Nâng cấp",
                 iconTint = Color(0xFFFF6FB5),      // sao hồng như app gốc
                 onClick = onUpgradeClick

@@ -120,6 +120,7 @@ app/src/main/java/com/vocatclone/app/
 │       ├── entity/          # Bookshelf, Bookcase, Word, WordMeaning (+ WordWithMeanings)
 │       └── dao/             # BookshelfDao, BookcaseDao, WordDao
 └── ui/
+    ├── auth/                # LoginActivity, RegisterActivity + màn hình, AuthViewModel (Firebase Auth)
     ├── components/          # VoCatBottomBar (5 tab)
     ├── home/                # Tab "Từ Vựng" — danh sách tủ sách / bộ từ
     ├── profile/             # Tab "Của tôi"

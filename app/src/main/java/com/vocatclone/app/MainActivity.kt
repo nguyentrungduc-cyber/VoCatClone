@@ -1,5 +1,6 @@
 package com.vocatclone.app
 
+import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import androidx.activity.ComponentActivity
@@ -20,6 +21,8 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import com.google.firebase.auth.FirebaseAuth
+import com.vocatclone.app.ui.auth.LoginActivity
+import com.vocatclone.app.ui.auth.RegisterActivity
 import com.vocatclone.app.ui.components.MainTab
 import com.vocatclone.app.ui.components.VoCatBottomBar
 import com.vocatclone.app.ui.home.HomeScreen
@@ -44,7 +47,16 @@ class MainActivity : ComponentActivity() {
 
                 MainApp(
                     userEmail = userEmail,
-                    onSignOut = { auth.signOut() }
+                    onSignOut = { auth.signOut() },
+                    // Chưa đăng nhập → mở màn Đăng nhập. Đã đăng nhập → (sau này) màn thông tin tài khoản.
+                    onAccountClick = {
+                        if (userEmail == null) {
+                            startActivity(Intent(this, LoginActivity::class.java))
+                        }
+                    },
+                    onRegisterClick = {
+                        startActivity(Intent(this, RegisterActivity::class.java))
+                    }
                 )
             }
         }
@@ -58,7 +70,9 @@ class MainActivity : ComponentActivity() {
 @Composable
 fun MainApp(
     userEmail: String? = null,
-    onSignOut: () -> Unit = {}
+    onSignOut: () -> Unit = {},
+    onAccountClick: () -> Unit = {},
+    onRegisterClick: () -> Unit = {}
 ) {
     var selectedTab by remember { mutableStateOf(MainTab.VOCAB) }
 
@@ -73,6 +87,8 @@ fun MainApp(
             MainTab.PROFILE -> ProfileScreen(
                 userEmail = userEmail,
                 modifier = Modifier.padding(innerPadding),
+                onAccountClick = onAccountClick,
+                onRegisterClick = onRegisterClick,
                 onSignOutClick = onSignOut
             )
             else -> {
