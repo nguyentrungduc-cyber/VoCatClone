@@ -64,7 +64,8 @@ import com.vocatclone.app.ui.theme.VoCatCloneTheme
  *
  * @param userEmail email đang đăng nhập; null nghĩa là chưa đăng nhập.
  */
-@OptIn(ExperimentalMaterial3Api::class)
+@OptIn(ExperimentalMaterial3Api::class) // cam kết chấp nhận de sai Material3 do dang thu nghiem
+
 @Composable
 fun ProfileScreen(
     userEmail: String?,

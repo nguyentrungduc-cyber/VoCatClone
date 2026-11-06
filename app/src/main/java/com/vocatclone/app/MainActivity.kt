@@ -32,7 +32,7 @@ import com.vocatclone.app.ui.theme.VoCatCloneTheme
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        enableEdgeToEdge()
+        enableEdgeToEdge(    )
         setContent {
             VoCatCloneTheme {
                 val auth = remember { FirebaseAuth.getInstance() }

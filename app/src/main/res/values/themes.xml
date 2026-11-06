@@ -1,3 +1,6 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
-    <style name="Theme.VoCatClone" parent="android:Theme.Material.Light.NoActionBar" />
+    <!-- Chế độ sáng. Nền cửa sổ khớp màu nền Compose để lúc mở app không bị nháy. -->
+    <style name="Theme.VoCatClone" parent="android:Theme.Material.Light.NoActionBar">
+        <item name="android:windowBackground">@color/light_background</item>
+    </style>
 </resources>
