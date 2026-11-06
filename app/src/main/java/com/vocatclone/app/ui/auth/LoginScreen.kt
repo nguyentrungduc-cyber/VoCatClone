@@ -147,12 +147,15 @@ private fun ForgotPasswordDialog(
     onSend: (String) -> Unit,
     onDismiss: () -> Unit
 ) {
-    var email by rememberSaveable { mutableStateOf(initialEmail) }
+    // Thêm initialEmail làm key để tự đồng bộ khi initialEmail thay đổi
+    var email by rememberSaveable(initialEmail) { mutableStateOf(initialEmail) }
     val emailError = if (email.isNotBlank() && !isValidEmail(email)) "Email không hợp lệ" else null
     val sent = uiState.infoMessage != null
 
     AlertDialog(
-        onDismissRequest = onDismiss,
+        onDismissRequest = {
+            if (!uiState.isLoading) onDismiss() // Không cho dismiss khi đang nạp API
+        },
         title = { Text("Quên mật khẩu") },
         text = {
             Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
@@ -178,7 +181,7 @@ private fun ForgotPasswordDialog(
             }
         },
         dismissButton = {
-            if (!sent) TextButton(onClick = onDismiss) { Text("Hủy") }
+            if (!sent) TextButton(onClick = onDismiss, enabled = !uiState.isLoading) { Text("Hủy") }
         }
     )
 }
