@@ -1,11 +1,17 @@
 package com.vocatclone.app.ui.components
 
+import android.content.res.Configuration
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Book
 import androidx.compose.material.icons.filled.CalendarMonth
 import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material.icons.filled.Pets
 import androidx.compose.material.icons.filled.Quiz
+import androidx.compose.material.icons.outlined.Book
+import androidx.compose.material.icons.outlined.CalendarMonth
+import androidx.compose.material.icons.outlined.Edit
+import androidx.compose.material.icons.outlined.Pets
+import androidx.compose.material.icons.outlined.Quiz
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.NavigationBar
@@ -15,14 +21,16 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.tooling.preview.Preview
+import com.vocatclone.app.ui.theme.VoCatCloneTheme
 
 /** 5 tab chính của app, giống thanh điều hướng dưới cùng của VoCat. */
 enum class MainTab(val label: String, val icon: ImageVector) {
-    ADD("Thêm vào", Icons.Filled.Edit),
-    VOCAB("Từ Vựng", Icons.Filled.Book),
-    QUIZ("Câu đố", Icons.Filled.Quiz),
-    CALENDAR("Lịch", Icons.Filled.CalendarMonth),
-    PROFILE("Của tôi", Icons.Filled.Pets)
+    ADD("Add", Icons.Outlined.Edit),
+    VOCAB("Vocabulary", Icons.Outlined.Book),
+    QUIZ("Quiz", Icons.Outlined.Quiz),
+    CALENDAR("Calendar", Icons.Outlined.CalendarMonth),
+    PROFILE("My", Icons.Outlined.Pets)
 }
 
 @Composable
@@ -37,7 +45,13 @@ fun VoCatBottomBar(
                 selected = tab == selected,
                 onClick = { onSelect(tab) },
                 icon = { Icon(tab.icon, contentDescription = tab.label) },
-                label = { Text(tab.label) },
+                label = {
+                    Text(
+                        text = tab.label,
+                        maxLines = 1,
+                        softWrap = false
+                    )
+                },
                 colors = NavigationBarItemDefaults.colors(
                     selectedIconColor = colors.secondary,      // tab đang chọn: màu vàng
                     selectedTextColor = colors.secondary,
@@ -49,3 +63,16 @@ fun VoCatBottomBar(
         }
     }
 }
+
+@Preview(name = "Light Mode", showBackground = true)
+@Preview(name = "Dark Mode", showBackground = true, uiMode = Configuration.UI_MODE_NIGHT_YES)
+@Composable
+private fun VoCatBottomBarPreview() {
+    VoCatCloneTheme {
+        VoCatBottomBar(
+            selected = MainTab.VOCAB,
+            onSelect = {}
+        )
+    }
+}
+
