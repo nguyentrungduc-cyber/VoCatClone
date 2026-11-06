@@ -8,25 +8,48 @@ import androidx.compose.material3.dynamicDarkColorScheme
 import androidx.compose.material3.dynamicLightColorScheme
 import androidx.compose.material3.lightColorScheme
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 
+// Theme "Xanh Đen": nền xanh đen thay vì đen thuần.
 private val DarkColorScheme = darkColorScheme(
-    primary = Purple80,
-    secondary = PurpleGrey80,
-    tertiary = Pink80
+    primary = NavyPrimary,
+    onPrimary = NavyOnPrimary,
+    secondary = NavySecondary,
+    onSecondary = NavyOnSecondary,
+    tertiary = NavyTertiary,
+    background = NavyBackground,
+    onBackground = NavyOnSurface,
+    surface = NavySurface,
+    onSurface = NavyOnSurface,
+    surfaceVariant = NavySurfaceVariant,
+    onSurfaceVariant = NavyOnSurfaceVariant,
+    outline = NavyOutline,
+    outlineVariant = NavyOutlineVariant
 )
 
 private val LightColorScheme = lightColorScheme(
-    primary = Purple40,
-    secondary = PurpleGrey40,
-    tertiary = Pink40
+    primary = LightPrimary,
+    onPrimary = Color.White,
+    secondary = LightSecondary,
+    onSecondary = Color.White,
+    tertiary = LightTertiary,
+    background = LightBackground,
+    onBackground = LightOnSurface,
+    surface = LightSurface,
+    onSurface = LightOnSurface,
+    surfaceVariant = LightSurfaceVariant,
+    onSurfaceVariant = LightOnSurfaceVariant,
+    outline = LightOutline,
+    outlineVariant = LightOutlineVariant
 )
 
 @Composable
 fun VoCatCloneTheme(
+    // Theo chế độ sáng/tối của máy: tối -> Xanh Đen, sáng -> bản sáng cùng tông.
     darkTheme: Boolean = isSystemInDarkTheme(),
-    // Dynamic color khả dụng trên Android 12+
-    dynamicColor: Boolean = true,
+    // Tắt dynamic color: nếu bật, Android 12+ sẽ lấy màu theo hình nền và đè mất bảng màu của app.
+    dynamicColor: Boolean = false,
     content: @Composable () -> Unit
 ) {
     val colorScheme = when {
