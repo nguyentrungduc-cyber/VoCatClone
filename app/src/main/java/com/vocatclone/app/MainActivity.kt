@@ -13,9 +13,11 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -27,7 +29,15 @@ import com.vocatclone.app.ui.components.MainTab
 import com.vocatclone.app.ui.components.VoCatBottomBar
 import com.vocatclone.app.ui.home.HomeScreen
 import com.vocatclone.app.ui.profile.ProfileScreen
+import com.vocatclone.app.ui.splash.SplashScreen
 import com.vocatclone.app.ui.theme.VoCatCloneTheme
+import com.vocatclone.app.ui.welcome.WelcomeScreen
+import kotlinx.coroutines.delay
+
+/** Thời gian hiện màn Splash (mili giây). */
+private const val SPLASH_DURATION_MS = 1200L
+private const val PREFS_NAME = "vocat_prefs"
+private const val KEY_SEEN_WELCOME = "seen_welcome"
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -45,19 +55,40 @@ class MainActivity : ComponentActivity() {
                     onDispose { auth.removeAuthStateListener(listener) }
                 }
 
-                MainApp(
-                    userEmail = userEmail,
-                    onSignOut = { auth.signOut() },
-                    // Chưa đăng nhập → mở màn Đăng nhập. Đã đăng nhập → (sau này) màn thông tin tài khoản.
-                    onAccountClick = {
-                        if (userEmail == null) {
-                            startActivity(Intent(this, LoginActivity::class.java))
+                // Splash hiện ~1,2 giây khi mở app. rememberSaveable: xoay màn hình không chiếu lại.
+                var showSplash by rememberSaveable { mutableStateOf(true) }
+                LaunchedEffect(Unit) {
+                    delay(SPLASH_DURATION_MS)
+                    showSplash = false
+                }
+
+                // Màn chào mừng chỉ hiện ở lần mở app đầu tiên (nhớ bằng SharedPreferences).
+                val prefs = remember { getSharedPreferences(PREFS_NAME, MODE_PRIVATE) }
+                var seenWelcome by remember { mutableStateOf(prefs.getBoolean(KEY_SEEN_WELCOME, false)) }
+
+                when {
+                    showSplash -> SplashScreen()
+                    !seenWelcome -> WelcomeScreen(
+                        onStartClick = {
+                            prefs.edit().putBoolean(KEY_SEEN_WELCOME, true).apply()
+                            seenWelcome = true
+                            // TODO: khi có màn "Tạo bộ từ vựng" thì mở màn đó thay vì vào thẳng MainApp.
                         }
-                    },
-                    onRegisterClick = {
-                        startActivity(Intent(this, RegisterActivity::class.java))
-                    }
-                )
+                    )
+                    else -> MainApp(
+                        userEmail = userEmail,
+                        onSignOut = { auth.signOut() },
+                        // Chưa đăng nhập → mở màn Đăng nhập. Đã đăng nhập → (sau này) màn thông tin tài khoản.
+                        onAccountClick = {
+                            if (userEmail == null) {
+                                startActivity(Intent(this, LoginActivity::class.java))
+                            }
+                        },
+                        onRegisterClick = {
+                            startActivity(Intent(this, RegisterActivity::class.java))
+                        }
+                    )
+                }
             }
         }
     }
