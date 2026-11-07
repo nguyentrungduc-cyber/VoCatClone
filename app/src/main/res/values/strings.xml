@@ -3,4 +3,18 @@
     <string name="home_title">Bộ từ vựng của tôi</string>
     <string name="empty_state_message">Chưa có bộ từ vựng nào. Nhấn + để tạo mới.</string>
     <string name="add_bookcase">Tạo bộ từ mới</string>
+    <!-- Màn hình Home (tab Vocabulary). Giao diện đang dùng tiếng Anh như Welcome/Profile;
+         muốn đổi sang tiếng Việt thì chỉ cần sửa chữ trong các dòng dưới đây. -->
+    <string name="home_search_hint">Search Vocabulary</string>
+    <string name="home_filter">Filter and sort</string>
+    <string name="home_manage_bookcases">Manage Bookcases</string>
+    <string name="home_add_vocabulary">Add Vocabulary</string>
+    <string name="home_empty_title">No Vocabulary yet</string>
+    <string name="home_empty_message">Tap + to create your first Vocabulary.</string>
+    <string name="home_no_results">No Vocabulary matches your search.</string>
+    <string name="home_total_words">Total words</string>
+    <string name="home_mastered_words">Mastered words</string>
+    <string name="home_more_options">More options</string>
+    <string name="home_expand">Expand</string>
+    <string name="home_collapse">Collapse</string>
 </resources>
