@@ -21,17 +21,16 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.filled.ExitToApp
 import androidx.compose.material.icons.automirrored.filled.KeyboardArrowRight
-import androidx.compose.material.icons.filled.Campaign
-import androidx.compose.material.icons.filled.CloudUpload
-import androidx.compose.material.icons.filled.Group
-import androidx.compose.material.icons.filled.Notifications
-import androidx.compose.material.icons.filled.Palette
-import androidx.compose.material.icons.filled.Person
-import androidx.compose.material.icons.filled.PersonAdd
-import androidx.compose.material.icons.filled.Settings
-import androidx.compose.material.icons.filled.Star
+import androidx.compose.material.icons.automirrored.outlined.ExitToApp
+import androidx.compose.material.icons.outlined.Campaign
+import androidx.compose.material.icons.outlined.CloudUpload
+import androidx.compose.material.icons.outlined.Group
+import androidx.compose.material.icons.outlined.Notifications
+import androidx.compose.material.icons.outlined.Palette
+import androidx.compose.material.icons.outlined.Person
+import androidx.compose.material.icons.outlined.Settings
+import androidx.compose.material.icons.outlined.StarOutline
 import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.HorizontalDivider
@@ -47,11 +46,13 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.vocatclone.app.R
 import com.vocatclone.app.ui.components.MainTab
 import com.vocatclone.app.ui.components.VoCatBottomBar
 import com.vocatclone.app.ui.theme.VoCatCloneTheme
@@ -72,7 +73,7 @@ fun ProfileScreen(
     modifier: Modifier = Modifier,
     appVersion: String = "v0.1.0",
     vocabNotificationOn: Boolean = true,
-    themeName: String = "Nero / Xanh Đen",
+    themeName: String = "Nero / White",
     onAnnouncementClick: () -> Unit = {},
     onSettingsClick: () -> Unit = {},
     onBackupClick: () -> Unit = {},
@@ -88,15 +89,15 @@ fun ProfileScreen(
 
     Column(modifier = modifier.fillMaxSize().background(colors.background)) {
         CenterAlignedTopAppBar(
-            title = { Text("Tôi") },
+            title = { Text("My") },
             navigationIcon = {
                 IconButton(onClick = onAnnouncementClick) {
-                    Icon(Icons.Filled.Campaign, contentDescription = "Thông báo từ nhà phát triển")
+                    Icon(Icons.Outlined.Campaign, contentDescription = "Developer announcement")
                 }
             },
             actions = {
                 IconButton(onClick = onSettingsClick) {
-                    Icon(Icons.Filled.Settings, contentDescription = "Cài đặt")
+                    Icon(Icons.Outlined.Settings, contentDescription = "Settings")
                 }
             },
             colors = TopAppBarDefaults.centerAlignedTopAppBarColors(
@@ -110,7 +111,7 @@ fun ProfileScreen(
         Column(modifier = Modifier.fillMaxWidth().verticalScroll(rememberScrollState())) {
             AnnouncementCard(
                 title = "$appVersion Update",
-                subtitle = "Đăng nhập bằng Firebase, quản lý tủ sách và bộ từ vựng",
+                subtitle = "Added Widget & Search Fields Options",
                 page = 1,
                 pageCount = 3,
                 onClick = onAnnouncementClick
@@ -119,59 +120,48 @@ fun ProfileScreen(
             BackupNotice(onClick = onBackupClick)
             HorizontalDivider(color = colors.outlineVariant)
 
-            // ----- Nhóm 1: tài khoản -----
+            // ----- Group 1: Account & Subscription -----
             ProfileRow(
-                icon = Icons.Filled.Person,
-                title = "Tài khoản",
-                value = userEmail ?: "Yêu cầu đăng nhập",
+                icon = Icons.Outlined.Person,
+                title = "Account",
+                value = if (userEmail != null) "GOOGLE" else "Login Required",
                 onClick = onAccountClick
             )
-            // Chỉ hiện khi chưa đăng nhập → mở RegisterActivity.
-            if (userEmail == null) {
-                ProfileRow(
-                    icon = Icons.Filled.PersonAdd,
-                    title = "Đăng ký tài khoản",
-                    value = "",
-                    onClick = onRegisterClick
-                )
-            }
-            // Dòng "Đăng ký" của app VoCat gốc là đăng ký GÓI TRẢ PHÍ, đổi tên để không nhầm với tạo tài khoản.
             ProfileRow(
-                icon = Icons.Filled.Star,
-                title = "Gói Premium",
-                value = "Nâng cấp",
-                iconTint = Color(0xFFFF6FB5),      // sao hồng như app gốc
+                icon = Icons.Outlined.StarOutline,
+                title = "Subscription",
+                value = "Upgrade",
+                iconTint = Color(0xFFFF6FB5),
                 onClick = onUpgradeClick
             )
 
             GroupGap()
 
-            // ----- Nhóm 2: cài đặt -----
+            // ----- Group 2: Settings -----
             ProfileRow(
-                icon = Icons.Filled.Notifications,
-                title = "Thông báo từ vựng",
-                value = if (vocabNotificationOn) "MỞ" else "TẮT",
+                icon = Icons.Outlined.Notifications,
+                title = "Word Notification",
+                value = if (vocabNotificationOn) "ON" else "OFF",
                 onClick = onNotificationClick
             )
             ProfileRow(
-                icon = Icons.Filled.Palette,
-                title = "Chủ đề",
+                icon = Icons.Outlined.Palette,
+                title = "Theme",
                 value = themeName,
                 onClick = onThemeClick
             )
             ProfileRow(
-                icon = Icons.Filled.Group,
-                title = "Mời bạn",
+                icon = Icons.Outlined.Group,
+                title = "Invite friends",
                 value = "0",
                 onClick = onInviteClick
             )
 
-            // Chỉ hiện khi đã đăng nhập — đây là use-case "Đăng xuất" của đồ án.
             if (userEmail != null) {
                 GroupGap()
                 ProfileRow(
-                    icon = Icons.AutoMirrored.Filled.ExitToApp,
-                    title = "Đăng xuất",
+                    icon = Icons.AutoMirrored.Outlined.ExitToApp,
+                    title = "Sign out",
                     value = "",
                     onClick = onSignOutClick
                 )
@@ -233,11 +223,10 @@ private fun AnnouncementCard(
 private fun BackupNotice(onClick: () -> Unit) {
     val colors = MaterialTheme.colorScheme
     val message = buildAnnotatedString {
-        append("Tất cả dữ liệu được lưu trữ trên thiết bị, ")
+        append("All data is stored on the device, ")
         withStyle(SpanStyle(color = colors.primary)) {
-            append("do đó dữ liệu có thể bị mất khi xóa ứng dụng hoặc dữ liệu ứng dụng. ")
+            append("so data can be lost when deleting an app or app data. Please back up regularly through Google Drive Sync.")
         }
-        append("Vui lòng sao lưu thường xuyên thông qua Google Drive Sync.")
     }
 
     Row(
@@ -248,15 +237,15 @@ private fun BackupNotice(onClick: () -> Unit) {
         verticalAlignment = Alignment.Top
     ) {
         Icon(
-            imageVector = Icons.Filled.CloudUpload,
-            contentDescription = null,
-            tint = colors.secondary,
+            painter = painterResource(R.drawable.ic_google_drive_logo),
+            contentDescription = "Google Drive",
+            tint = Color.Unspecified,
             modifier = Modifier.size(28.dp)
         )
         Spacer(Modifier.width(16.dp))
         Column {
             Text(
-                text = "Cập nhật Dữ liệu Google Drive",
+                text = "Google Drive Data Sync",
                 style = MaterialTheme.typography.titleLarge,
                 color = colors.onSurface
             )
@@ -325,7 +314,7 @@ private fun ProfileScreenPreviewLoggedOut() {
     }
 }
 
-@Preview(showBackground = true, uiMode = Configuration.UI_MODE_NIGHT_YES, widthDp = 400, heightDp = 860)
+@Preview(showBackground = true, uiMode = Configuration.UI_MODE_NIGHT_NO, widthDp = 400, heightDp = 860)
 @Composable
 private fun ProfileScreenPreviewLoggedIn() {
     VoCatCloneTheme {
