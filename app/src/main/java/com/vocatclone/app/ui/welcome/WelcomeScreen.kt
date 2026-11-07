@@ -63,7 +63,7 @@ fun WelcomeScreen(
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.spacedBy(22.dp)
         ) {
-            SpeechBubble(text = "Rất vui được gặp bạn!\nMình đã đợi bạn lâu rồi!")
+            SpeechBubble(text = "Nice to meet you!\nI was waiting for you!")
             CatMascot()
         }
 
@@ -83,7 +83,7 @@ fun WelcomeScreen(
         ) {
             Icon(imageVector = Icons.Filled.Pets, contentDescription = null, modifier = Modifier.size(24.dp))
             Spacer(Modifier.width(10.dp))
-            Text(text = "Tạo bộ từ vựng đầu tiên", fontSize = 17.sp, fontWeight = FontWeight.SemiBold)
+            Text(text = "Go to make a Vocabulary", fontSize = 17.sp, fontWeight = FontWeight.SemiBold)
         }
     }
 }
@@ -105,9 +105,7 @@ private fun SpeechBubble(text: String, modifier: Modifier = Modifier) {
             Text(
                 text = text,
                 color = colors.onSurface,
-                fontSize = 19.sp,
-                lineHeight = 28.sp,
-                fontWeight = FontWeight.Medium,
+                style = MaterialTheme.typography.titleMedium,
                 textAlign = TextAlign.Center,
                 modifier = Modifier.padding(horizontal = 24.dp, vertical = 20.dp)
             )
