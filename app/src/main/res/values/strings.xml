@@ -17,4 +17,17 @@
     <string name="home_more_options">More options</string>
     <string name="home_expand">Expand</string>
     <string name="home_collapse">Collapse</string>
+    <!-- Màn hình Tạo / Sửa bộ từ vựng (Vocabulary). Giao diện tiếng Anh như các màn khác. -->
+    <string name="form_title_create">Vocabulary</string>
+    <string name="form_title_edit">Edit Vocabulary</string>
+    <string name="form_back">Back</string>
+    <string name="form_bookcase_label">Bookcase</string>
+    <string name="form_name_header">Vocabulary Name</string>
+    <string name="form_name_hint">Write the Vocabulary name</string>
+    <string name="form_language_header">Language</string>
+    <string name="form_word_language">Word</string>
+    <string name="form_meaning_language">Meaning</string>
+    <string name="form_swap">Swap languages</string>
+    <string name="form_submit_create">Create Vocabulary</string>
+    <string name="form_submit_save">Save changes</string>
 </resources>
