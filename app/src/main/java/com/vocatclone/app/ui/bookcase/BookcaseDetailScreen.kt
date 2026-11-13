@@ -27,13 +27,10 @@ import androidx.compose.material.icons.automirrored.outlined.VolumeUp
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.outlined.Book
 import androidx.compose.material.icons.outlined.Image
-import androidx.compose.material.icons.outlined.MoreVert
 import androidx.compose.material.icons.outlined.Pets
 import androidx.compose.material.icons.outlined.Search
 import androidx.compose.material.icons.outlined.Tune
 import androidx.compose.material3.CenterAlignedTopAppBar
-import androidx.compose.material3.DropdownMenu
-import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -61,7 +58,10 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.vocatclone.app.R
+import com.vocatclone.app.ui.home.BookshelfUi
 import com.vocatclone.app.ui.theme.VoCatCloneTheme
+import com.vocatclone.app.ui.word.NO_BOOKCASE
+import com.vocatclone.app.ui.word.WordActionsMenuButton
 import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
@@ -72,7 +72,7 @@ import java.util.Locale
  *
  * Gồm: thanh trên (quay lại, tên bộ, nút sắp xếp/lọc, nút thêm từ), ô tìm kiếm, dòng "Total N",
  * và danh sách thẻ từ. Mỗi thẻ có: số thứ tự và ngày giờ tạo, nút nghe phát âm, nút đã thuộc (chân mèo),
- * menu ba chấm (sửa, chuyển bộ, đổi ngày giờ, xóa), từ, phiên âm, loại từ, các nghĩa, mô tả.
+ * menu ba chấm (WordActionsMenuButton: sửa, chuyển bộ, đổi ngày giờ, xóa), từ, phiên âm, loại từ, các nghĩa, mô tả.
  *
  * Màn hình CHỈ vẽ giao diện: không gọi database. Dữ liệu và sự kiện truyền từ ngoài vào (state hoisting).
  * Tìm kiếm lọc ngay trên danh sách đang có, theo từ hoặc theo nghĩa.
@@ -95,10 +95,12 @@ fun BookcaseDetailScreen(
     onWordClick: (Long) -> Unit = {},
     onSpeak: (Long) -> Unit = {},
     onToggleMastered: (Long) -> Unit = {},
-    onEditWord: (Long) -> Unit = {},
-    onMoveWord: (Long) -> Unit = {},
-    onChangeDate: (Long) -> Unit = {},
-    onDeleteWord: (Long) -> Unit = {}
+    currentBookcaseId: Long = NO_BOOKCASE,
+    moveTargets: List<BookshelfUi> = emptyList(),
+    onEditWord: (wordId: Long) -> Unit = {},
+    onMoveWord: (wordId: Long, targetBookcaseId: Long) -> Unit = { _, _ -> },
+    onChangeDateTime: (wordId: Long, newMillis: Long) -> Unit = { _, _ -> },
+    onDeleteWord: (wordId: Long) -> Unit = {}
 ) {
     val colors = MaterialTheme.colorScheme
     var query by rememberSaveable { mutableStateOf("") }
@@ -183,9 +185,11 @@ fun BookcaseDetailScreen(
                             onClick = { onWordClick(word.id) },
                             onSpeak = { onSpeak(word.id) },
                             onToggleMastered = { onToggleMastered(word.id) },
+                            currentBookcaseId = currentBookcaseId,
+                            moveTargets = moveTargets,
                             onEdit = { onEditWord(word.id) },
-                            onMove = { onMoveWord(word.id) },
-                            onChangeDate = { onChangeDate(word.id) },
+                            onMove = { targetId -> onMoveWord(word.id, targetId) },
+                            onChangeDateTime = { millis -> onChangeDateTime(word.id, millis) },
                             onDelete = { onDeleteWord(word.id) }
                         )
                     }
@@ -216,14 +220,15 @@ private fun WordCard(
     onClick: () -> Unit,
     onSpeak: () -> Unit,
     onToggleMastered: () -> Unit,
+    currentBookcaseId: Long,
+    moveTargets: List<BookshelfUi>,
     onEdit: () -> Unit,
-    onMove: () -> Unit,
-    onChangeDate: () -> Unit,
+    onMove: (targetBookcaseId: Long) -> Unit,
+    onChangeDateTime: (newMillis: Long) -> Unit,
     onDelete: () -> Unit
 ) {
     val colors = MaterialTheme.colorScheme
     val shape = RoundedCornerShape(16.dp)
-    var menuOpen by remember { mutableStateOf(false) }
     val dateText = remember(word.createdAt) { formatDateTime(word.createdAt) }
 
     Surface(
@@ -256,29 +261,16 @@ private fun WordCard(
                         tint = if (word.isMastered) colors.primary else colors.onSurfaceVariant.copy(alpha = 0.5f)
                     )
                 }
-                Box {
-                    IconButton(onClick = { menuOpen = true }) {
-                        Icon(Icons.Outlined.MoreVert, contentDescription = stringResource(R.string.detail_more_options))
-                    }
-                    DropdownMenu(expanded = menuOpen, onDismissRequest = { menuOpen = false }) {
-                        DropdownMenuItem(
-                            text = { Text(stringResource(R.string.detail_menu_edit)) },
-                            onClick = { menuOpen = false; onEdit() }
-                        )
-                        DropdownMenuItem(
-                            text = { Text(stringResource(R.string.detail_menu_move)) },
-                            onClick = { menuOpen = false; onMove() }
-                        )
-                        DropdownMenuItem(
-                            text = { Text(stringResource(R.string.detail_menu_change_date)) },
-                            onClick = { menuOpen = false; onChangeDate() }
-                        )
-                        DropdownMenuItem(
-                            text = { Text(stringResource(R.string.detail_menu_delete)) },
-                            onClick = { menuOpen = false; onDelete() }
-                        )
-                    }
-                }
+                WordActionsMenuButton(
+                    wordTerm = word.term,
+                    createdAtMillis = word.createdAt,
+                    currentBookcaseId = currentBookcaseId,
+                    moveTargets = moveTargets,
+                    onEdit = onEdit,
+                    onMoveTo = onMove,
+                    onChangeDateTime = onChangeDateTime,
+                    onDelete = onDelete
+                )
             }
 
             // Ảnh (giữ chỗ), từ, phiên âm, loại từ
