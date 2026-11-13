@@ -42,11 +42,6 @@
     <string name="detail_speak">Pronounce word</string>
     <string name="detail_mark_mastered">Mark as mastered</string>
     <string name="detail_mark_not_mastered">Mark as not mastered</string>
-    <string name="detail_more_options">More options</string>
-    <string name="detail_menu_edit">Edit</string>
-    <string name="detail_menu_move">Move to another Vocabulary</string>
-    <string name="detail_menu_change_date">Change date and time</string>
-    <string name="detail_menu_delete">Delete</string>
     <!-- Màn hình Thêm / Sửa từ vựng. Giao diện tiếng Anh như các màn khác. -->
     <string name="wf_set_label">Vocabulary</string>
     <string name="wf_back">Back</string>
@@ -83,10 +78,6 @@
     <!-- Màn hình xem chi tiết một từ vựng. Giao diện tiếng Anh như các màn khác. -->
     <string name="wd_back">Back</string>
     <string name="wd_edit">Edit word</string>
-    <string name="wd_more_options">More options</string>
-    <string name="wd_menu_move">Move to another Vocabulary</string>
-    <string name="wd_menu_change_date">Change date and time</string>
-    <string name="wd_menu_delete">Delete</string>
     <string name="wd_image">Word image</string>
     <string name="wd_speak">Pronounce word</string>
     <string name="wd_mastered">Mastered</string>
@@ -99,8 +90,22 @@
     <string name="wd_last_reviewed">Last reviewed</string>
     <string name="wd_added">Added</string>
     <string name="wd_never">Never</string>
-    <string name="wd_delete_title">Delete this word?</string>
-    <string name="wd_delete_message">\u201c%1$s\u201d and its meanings will be deleted. This cannot be undone.</string>
-    <string name="wd_delete_confirm">Delete</string>
-    <string name="wd_delete_cancel">Cancel</string>
+    <!-- Menu thao tác trên một từ (Edit, Move, Change date and time, Delete) và các hộp thoại của nó. -->
+    <string name="wa_more_options">More options</string>
+    <string name="wa_edit">Edit</string>
+    <string name="wa_move">Move to another Vocabulary</string>
+    <string name="wa_change_date_time">Change date and time</string>
+    <string name="wa_delete">Delete</string>
+    <string name="wa_cancel">Cancel</string>
+    <string name="wa_next">Next</string>
+    <string name="wa_back">Back</string>
+    <string name="wa_ok">OK</string>
+    <string name="wa_move_title">Move to another Vocabulary</string>
+    <string name="wa_move_empty">There is no other Vocabulary to move this word to.</string>
+    <string name="wa_move_confirm">Move</string>
+    <string name="wa_move_language_differs">Different language pair</string>
+    <string name="wa_time_title">Select time</string>
+    <string name="wa_delete_title">Delete this word?</string>
+    <string name="wa_delete_message">\u201c%1$s\u201d and its meanings will be deleted. This cannot be undone.</string>
+    <string name="wa_delete_confirm">Delete</string>
 </resources>

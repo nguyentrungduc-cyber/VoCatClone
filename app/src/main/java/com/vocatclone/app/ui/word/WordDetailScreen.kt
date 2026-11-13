@@ -22,12 +22,8 @@ import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.automirrored.outlined.VolumeUp
 import androidx.compose.material.icons.outlined.Edit
 import androidx.compose.material.icons.outlined.Image
-import androidx.compose.material.icons.outlined.MoreVert
 import androidx.compose.material.icons.outlined.Pets
-import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.CenterAlignedTopAppBar
-import androidx.compose.material3.DropdownMenu
-import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
@@ -37,14 +33,8 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Switch
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextButton
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.saveable.rememberSaveable
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -55,6 +45,7 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.vocatclone.app.R
+import com.vocatclone.app.ui.home.BookshelfUi
 import com.vocatclone.app.ui.theme.VoCatCloneTheme
 import java.text.SimpleDateFormat
 import java.util.Date
@@ -66,7 +57,8 @@ import java.util.Locale
  * Hiện: ảnh, từ kèm nút nghe phát âm, phiên âm và loại từ, công tắc "Mastered", danh sách nghĩa
  * có đánh số, ví dụ kèm bản dịch, từ đồng nghĩa, mô tả, và thông tin học (số lần ôn, lần ôn gần nhất,
  * ngày thêm). Phần nào của từ chưa có dữ liệu thì không hiện.
- * Thanh trên có nút sửa và menu ba chấm (chuyển bộ, đổi ngày giờ, xóa). Xóa luôn hỏi xác nhận trước.
+ * Thanh trên có nút sửa và menu ba chấm ([WordActionsMenuButton]: chuyển bộ, đổi ngày giờ, xóa).
+ * Xóa luôn hỏi xác nhận trước.
  *
  * Màn hình CHỈ vẽ giao diện, không gọi database; dữ liệu và sự kiện truyền từ ngoài (state hoisting).
  * Ảnh hiện là khung giữ chỗ vì dự án chưa có thư viện tải ảnh.
@@ -84,13 +76,13 @@ fun WordDetailScreen(
     onEdit: () -> Unit = {},
     onSpeak: () -> Unit = {},
     onToggleMastered: () -> Unit = {},
-    onMove: () -> Unit = {},
-    onChangeDate: () -> Unit = {},
+    currentBookcaseId: Long = NO_BOOKCASE,
+    moveTargets: List<BookshelfUi> = emptyList(),
+    onMove: (targetBookcaseId: Long) -> Unit = {},
+    onChangeDateTime: (newMillis: Long) -> Unit = {},
     onDelete: () -> Unit = {}
 ) {
     val colors = MaterialTheme.colorScheme
-    var menuOpen by remember { mutableStateOf(false) }
-    var confirmDelete by rememberSaveable { mutableStateOf(false) }
 
     Scaffold(
         modifier = modifier,
@@ -106,25 +98,16 @@ fun WordDetailScreen(
                     IconButton(onClick = onEdit) {
                         Icon(Icons.Outlined.Edit, contentDescription = stringResource(R.string.wd_edit))
                     }
-                    Box {
-                        IconButton(onClick = { menuOpen = true }) {
-                            Icon(Icons.Outlined.MoreVert, contentDescription = stringResource(R.string.wd_more_options))
-                        }
-                        DropdownMenu(expanded = menuOpen, onDismissRequest = { menuOpen = false }) {
-                            DropdownMenuItem(
-                                text = { Text(stringResource(R.string.wd_menu_move)) },
-                                onClick = { menuOpen = false; onMove() }
-                            )
-                            DropdownMenuItem(
-                                text = { Text(stringResource(R.string.wd_menu_change_date)) },
-                                onClick = { menuOpen = false; onChangeDate() }
-                            )
-                            DropdownMenuItem(
-                                text = { Text(stringResource(R.string.wd_menu_delete)) },
-                                onClick = { menuOpen = false; confirmDelete = true }
-                            )
-                        }
-                    }
+                    WordActionsMenuButton(
+                        wordTerm = word.term,
+                        createdAtMillis = word.createdAt,
+                        currentBookcaseId = currentBookcaseId,
+                        moveTargets = moveTargets,
+                        onEdit = onEdit,
+                        onMoveTo = onMove,
+                        onChangeDateTime = onChangeDateTime,
+                        onDelete = onDelete
+                    )
                 },
                 colors = TopAppBarDefaults.centerAlignedTopAppBarColors(
                     containerColor = colors.background,
@@ -294,25 +277,6 @@ fun WordDetailScreen(
             }
             Spacer(Modifier.height(24.dp))
         }
-    }
-
-    // Xóa luôn hỏi lại, vì không hoàn tác được
-    if (confirmDelete) {
-        AlertDialog(
-            onDismissRequest = { confirmDelete = false },
-            title = { Text(stringResource(R.string.wd_delete_title)) },
-            text = { Text(stringResource(R.string.wd_delete_message, word.term)) },
-            confirmButton = {
-                TextButton(onClick = { confirmDelete = false; onDelete() }) {
-                    Text(text = stringResource(R.string.wd_delete_confirm), color = colors.error)
-                }
-            },
-            dismissButton = {
-                TextButton(onClick = { confirmDelete = false }) {
-                    Text(stringResource(R.string.wd_delete_cancel))
-                }
-            }
-        )
     }
 }
 
