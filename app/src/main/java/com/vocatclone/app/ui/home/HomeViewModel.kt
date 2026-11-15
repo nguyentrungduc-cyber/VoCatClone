@@ -5,6 +5,7 @@ import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
 import com.vocatclone.app.data.local.AppDatabase
 import com.vocatclone.app.data.repository.AuthRepository
+import com.vocatclone.app.data.seed.SampleData
 import com.vocatclone.app.data.repository.BookcaseRepository
 import com.vocatclone.app.data.repository.BookshelfRepository
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -30,6 +31,12 @@ class HomeViewModel(application: Application) : AndroidViewModel(application) {
     val shelves: StateFlow<List<BookshelfUi>> = auth.uidFlow
         .flatMapLatest { uid -> if (uid == null) flowOf(emptyList<BookshelfUi>()) else shelfRepo.observeShelves(uid) }
         .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5_000), emptyList())
+
+    /** Thêm dữ liệu mẫu cho tài khoản đang đăng nhập (chỉ khi chưa có tủ sách nào). Dùng khi phát triển. */
+    fun seedSampleData() = viewModelScope.launch {
+        val uid = auth.currentUser?.uid ?: return@launch
+        runCatching { SampleData.insertFor(db, uid) }
+    }
 
     fun createShelf(name: String) = viewModelScope.launch {
         val uid = auth.currentUser?.uid ?: return@launch

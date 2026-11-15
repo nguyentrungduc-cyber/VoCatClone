@@ -47,8 +47,8 @@ fun MainApp(
     onSignOut: () -> Unit = {},
     onAccountClick: () -> Unit = {},
     onRegisterClick: () -> Unit = {},
-    onAddBookcase: () -> Unit = {},
-    onOpenBookcase: (bookcaseId: Long) -> Unit = {}
+    /** Nội dung tab Vocabulary. Mặc định là Home rỗng để Preview chạy được mà không cần database. */
+    vocabulary: @Composable (Modifier) -> Unit = { m -> HomeScreen(modifier = m) }
 ) {
     var selectedTab by remember { mutableStateOf(MainTab.VOCAB) }
 
@@ -59,11 +59,7 @@ fun MainApp(
         }
     ) { innerPadding ->
         when (selectedTab) {
-            MainTab.VOCAB -> HomeScreen(
-                modifier = Modifier.padding(innerPadding),
-                onAddClick = onAddBookcase,
-                onBookcaseClick = onOpenBookcase
-            )
+            MainTab.VOCAB -> vocabulary(Modifier.padding(innerPadding))
             MainTab.PROFILE -> ProfileScreen(
                 userEmail = userEmail,
                 modifier = Modifier.padding(innerPadding),
