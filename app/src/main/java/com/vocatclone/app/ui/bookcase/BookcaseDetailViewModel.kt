@@ -64,13 +64,13 @@ class BookcaseDetailViewModel(application: Application) : AndroidViewModel(appli
         }
         .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5_000), BookcaseDetailState())
 
-    fun toggleMastered(wordId: Long) = viewModelScope.launch { wordRepo.toggleMastered(wordId) }
+    fun toggleMastered(wordId: Long) = viewModelScope.launch { runCatching { wordRepo.toggleMastered(wordId) } }
 
     fun moveWord(wordId: Long, targetBookcaseId: Long) =
-        viewModelScope.launch { wordRepo.moveToBookcase(wordId, targetBookcaseId) }
+        viewModelScope.launch { runCatching { wordRepo.moveToBookcase(wordId, targetBookcaseId) } }
 
     fun changeDateTime(wordId: Long, newMillis: Long) =
-        viewModelScope.launch { wordRepo.changeDateTime(wordId, newMillis) }
+        viewModelScope.launch { runCatching { wordRepo.changeDateTime(wordId, newMillis) } }
 
-    fun deleteWord(wordId: Long) = viewModelScope.launch { wordRepo.delete(wordId) }
+    fun deleteWord(wordId: Long) = viewModelScope.launch { runCatching { wordRepo.delete(wordId) } }
 }

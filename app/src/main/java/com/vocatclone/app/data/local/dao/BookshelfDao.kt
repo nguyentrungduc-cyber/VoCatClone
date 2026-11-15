@@ -19,6 +19,10 @@ interface BookshelfDao {
     @Query("SELECT * FROM bookshelves WHERE firebaseUid = :uid ORDER BY createdAt ASC, id ASC LIMIT 1")
     suspend fun getFirstByUser(uid: String): BookshelfEntity?
 
+    /** 1 nếu tủ sách [shelfId] thuộc user [uid], ngược lại 0. */
+    @Query("SELECT COUNT(*) FROM bookshelves WHERE id = :shelfId AND firebaseUid = :uid")
+    suspend fun countOwned(shelfId: Long, uid: String): Int
+
     @Query("SELECT * FROM bookshelves WHERE id = :id")
     suspend fun getById(id: Long): BookshelfEntity?
 

@@ -9,7 +9,10 @@ import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.map
 
 /** Tủ sách (Bookshelf) và dữ liệu cho màn Home: tủ sách -> bộ từ vựng -> số từ. */
-class BookshelfRepository(db: AppDatabase) {
+class BookshelfRepository(
+    db: AppDatabase,
+    private val guard: OwnershipGuard = OwnershipGuard(db)
+) {
 
     private val shelfDao = db.bookshelfDao()
     private val bookcaseDao = db.bookcaseDao()
@@ -48,12 +51,14 @@ class BookshelfRepository(db: AppDatabase) {
     suspend fun renameShelf(shelfId: Long, name: String) {
         val clean = name.trim()
         require(clean.isNotEmpty()) { "Tên tủ sách không được để trống" }
+        guard.requireShelf(shelfId)
         val shelf = shelfDao.getById(shelfId) ?: return
         shelfDao.update(shelf.copy(name = clean))
     }
 
     /** Xóa tủ sách; các bộ từ vựng, từ và nghĩa bên trong bị xóa theo (ON DELETE CASCADE). */
     suspend fun deleteShelf(shelfId: Long) {
+        guard.requireShelf(shelfId)
         shelfDao.getById(shelfId)?.let { shelfDao.delete(it) }
     }
 

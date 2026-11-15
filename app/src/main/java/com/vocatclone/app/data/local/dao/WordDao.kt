@@ -43,6 +43,15 @@ abstract class WordDao {
     )
     abstract fun observeCountsByUser(uid: String): Flow<List<BookcaseWordCount>>
 
+    /** 1 nếu từ [wordId] nằm trong bộ từ vựng và tủ sách của user [uid], ngược lại 0. */
+    @Query(
+        "SELECT COUNT(*) FROM words w " +
+            "INNER JOIN bookcases bc ON w.bookcaseId = bc.id " +
+            "INNER JOIN bookshelves bs ON bc.bookshelfId = bs.id " +
+            "WHERE w.id = :wordId AND bs.firebaseUid = :uid"
+    )
+    abstract suspend fun countOwned(wordId: Long, uid: String): Int
+
     /** Dùng cho ôn tập — chỉ lấy các từ chưa thuộc. */
     @Transaction
     @Query("SELECT * FROM words WHERE bookcaseId = :bookcaseId AND isMastered = 0")

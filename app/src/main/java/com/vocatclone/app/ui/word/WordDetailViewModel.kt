@@ -81,6 +81,6 @@ class WordDetailViewModel(application: Application) : AndroidViewModel(applicati
 
     private fun withWord(block: suspend (Long) -> Unit) {
         val id = wordId.value ?: return
-        viewModelScope.launch { block(id) }
+        viewModelScope.launch { runCatching { block(id) } }
     }
 }

@@ -40,7 +40,7 @@ class HomeViewModel(application: Application) : AndroidViewModel(application) {
         runCatching { shelfRepo.renameShelf(shelfId, name) }
     }
 
-    fun deleteShelf(shelfId: Long) = viewModelScope.launch { shelfRepo.deleteShelf(shelfId) }
+    fun deleteShelf(shelfId: Long) = viewModelScope.launch { runCatching { shelfRepo.deleteShelf(shelfId) } }
 
-    fun deleteBookcase(bookcaseId: Long) = viewModelScope.launch { bookcaseRepo.delete(bookcaseId) }
+    fun deleteBookcase(bookcaseId: Long) = viewModelScope.launch { runCatching { bookcaseRepo.delete(bookcaseId) } }
 }
