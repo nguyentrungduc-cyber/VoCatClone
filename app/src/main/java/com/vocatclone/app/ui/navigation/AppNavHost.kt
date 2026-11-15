@@ -24,6 +24,7 @@ import com.vocatclone.app.MainApp
 import com.vocatclone.app.ui.auth.AuthViewModel
 import com.vocatclone.app.ui.auth.LoginScreen
 import com.vocatclone.app.ui.auth.RegisterScreen
+import com.vocatclone.app.ui.home.HomeRoute
 import com.vocatclone.app.ui.splash.SplashScreen
 import com.vocatclone.app.ui.welcome.WelcomeScreen
 import kotlinx.coroutines.delay
@@ -131,8 +132,13 @@ fun AppNavHost(
                     if (userEmail == null) navController.navigate(Routes.LOGIN) { launchSingleTop = true }
                 },
                 onRegisterClick = { navController.navigate(Routes.REGISTER) { launchSingleTop = true } },
-                onAddBookcase = { navController.navigate(Routes.bookcaseForm()) },
-                onOpenBookcase = { id -> navController.navigate(Routes.bookcaseDetail(id)) }
+                vocabulary = { m ->
+                    HomeRoute(
+                        modifier = m,
+                        onAddBookcase = { navController.navigate(Routes.bookcaseForm()) },
+                        onOpenBookcase = { id -> navController.navigate(Routes.bookcaseDetail(id)) }
+                    )
+                }
             )
         }
 
