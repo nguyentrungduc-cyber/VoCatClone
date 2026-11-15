@@ -29,6 +29,7 @@ import com.vocatclone.app.ui.bookcase.BookcaseFormRoute
 import com.vocatclone.app.ui.home.HomeRoute
 import com.vocatclone.app.ui.splash.SplashScreen
 import com.vocatclone.app.ui.welcome.WelcomeScreen
+import com.vocatclone.app.ui.word.WordFormRoute
 import kotlinx.coroutines.delay
 
 /** Thời gian hiện màn Splash (mili giây). */
@@ -156,7 +157,8 @@ fun AppNavHost(
                 bookcaseId = id,
                 onBack = { navController.popBackStack() },
                 onAddWord = { bookcaseId -> navController.navigate(Routes.wordForm(bookcaseId)) },
-                onOpenWord = { wordId -> navController.navigate(Routes.wordDetail(wordId)) }
+                onOpenWord = { wordId -> navController.navigate(Routes.wordDetail(wordId)) },
+                onEditWord = { wordId -> navController.navigate(Routes.wordForm(id, wordId)) }
             )
         }
 
@@ -190,8 +192,11 @@ fun AppNavHost(
         ) { entry ->
             val bookcaseId = entry.arguments?.getLong(Routes.ARG_BOOKCASE_ID) ?: NO_ID
             val wordId = entry.arguments?.getLong(Routes.ARG_WORD_ID) ?: NO_ID
-            val mode = if (wordId == NO_ID) "Thêm từ vào bộ $bookcaseId" else "Sửa từ $wordId (bộ $bookcaseId)"
-            PlaceholderScreen("Form từ vựng", mode, onBack = { navController.popBackStack() })
+            WordFormRoute(
+                bookcaseId = bookcaseId,
+                wordId = wordId.takeIf { it != NO_ID },
+                onDone = { navController.popBackStack() }
+            )
         }
     }
 }
