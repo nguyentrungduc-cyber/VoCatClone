@@ -15,7 +15,11 @@ data class BookcaseUi(
     val wordCount: Int,
     val masteredCount: Int
 ) {
-    /** Tỉ lệ đã thuộc, từ 0f đến 1f (bộ trống thì là 0). */
+    /**
+     * Tỉ lệ đã thuộc, từ 0f đến 1f (bộ trống thì là 0).
+     * Chữ get() = ... có nghĩa là: "Đừng tốn thanh RAM để lưu trữ biến này.
+     * Bất cứ khi nào màn hình yêu cầu vẽ thanh phần trăm (Progress Bar), hãy chạy công thức tính toán này ngay tại chỗ cho tao!"
+     */
     val progress: Float
         get() = if (wordCount == 0) 0f else (masteredCount.toFloat() / wordCount).coerceIn(0f, 1f)
 }
@@ -32,7 +36,10 @@ data class BookshelfUi(
     val name: String,
     val bookcases: List<BookcaseUi>
 ) {
-    /** Tổng số từ của cả tủ sách, hiện trong ngoặc cạnh tên. */
+    /**
+     * Tổng số từ của cả tủ sách, hiện trong ngoặc cạnh tên.
+     * sumof: giúp giảm việc gọi vòng lặp, cộng các wordCount của các Bookcases lại
+     * */
     val wordCount: Int
         get() = bookcases.sumOf { it.wordCount }
 }
