@@ -22,6 +22,13 @@ interface BookcaseDao {
     )
     fun getAllByUser(uid: String): Flow<List<BookcaseEntity>>
 
+    /** 1 nếu bộ từ vựng [bookcaseId] nằm trong tủ sách của user [uid], ngược lại 0. */
+    @Query(
+        "SELECT COUNT(*) FROM bookcases bc INNER JOIN bookshelves bs ON bc.bookshelfId = bs.id " +
+            "WHERE bc.id = :bookcaseId AND bs.firebaseUid = :uid"
+    )
+    suspend fun countOwned(bookcaseId: Long, uid: String): Int
+
     @Query("SELECT * FROM bookcases WHERE id = :id")
     suspend fun getById(id: Long): BookcaseEntity?
 

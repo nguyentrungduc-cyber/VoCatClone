@@ -22,8 +22,8 @@ data class BookcaseFormState(
     /** Giá trị điền sẵn: mặc định khi tạo mới, dữ liệu cũ khi sửa. */
     val initial: BookcaseFormValues = BookcaseFormValues(),
     val isEditing: Boolean = false,
-    /** Đang đọc dữ liệu cũ (chỉ khi sửa). Nên chờ xong rồi mới vẽ form để [initial] đúng. */
-    val isLoading: Boolean = false,
+    /** Đang chuẩn bị giá trị ban đầu (đọc dữ liệu cũ khi sửa, tìm/tạo tủ mặc định khi tạo mới). Chờ xong rồi mới vẽ form. */
+    val isLoading: Boolean = true,
     /** true sau khi lưu xong -> màn hình đóng lại. */
     val isSaved: Boolean = false,
     val errorMessage: String? = null
@@ -59,7 +59,14 @@ class BookcaseFormViewModel(application: Application) : AndroidViewModel(applica
         started = true
         editingId = bookcaseId
         if (bookcaseId == null) {
-            _state.update { it.copy(initial = BookcaseFormValues(shelfId = defaultShelfId), isEditing = false) }
+            // Form chỉ cho bấm Tạo khi đã chọn tủ sách, nên user mới (chưa có tủ nào) cần một tủ mặc định.
+            _state.update { it.copy(isEditing = false, isLoading = true) }
+            viewModelScope.launch {
+                val shelfId = defaultShelfId ?: runCatching {
+                    auth.currentUser?.uid?.let { shelfRepo.ensureDefaultShelf(it) }
+                }.getOrNull()
+                _state.update { it.copy(isLoading = false, initial = BookcaseFormValues(shelfId = shelfId)) }
+            }
             return
         }
         _state.update { it.copy(isEditing = true, isLoading = true) }
