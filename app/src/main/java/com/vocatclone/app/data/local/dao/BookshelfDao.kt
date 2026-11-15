@@ -15,6 +15,10 @@ interface BookshelfDao {
     @Query("SELECT * FROM bookshelves WHERE firebaseUid = :uid ORDER BY createdAt DESC")
     fun getByUser(uid: String): Flow<List<BookshelfEntity>>
 
+    /** Tủ sách đầu tiên (cũ nhất) của user, dùng để chọn tủ mặc định. */
+    @Query("SELECT * FROM bookshelves WHERE firebaseUid = :uid ORDER BY createdAt ASC, id ASC LIMIT 1")
+    suspend fun getFirstByUser(uid: String): BookshelfEntity?
+
     @Query("SELECT * FROM bookshelves WHERE id = :id")
     suspend fun getById(id: Long): BookshelfEntity?
 
