@@ -6,6 +6,7 @@ import androidx.room.Insert
 import androidx.room.Query
 import androidx.room.Transaction
 import androidx.room.Update
+import com.vocatclone.app.data.local.entity.BookcaseWordCount
 import com.vocatclone.app.data.local.entity.WordEntity
 import com.vocatclone.app.data.local.entity.WordMeaningEntity
 import com.vocatclone.app.data.local.entity.WordWithMeanings
@@ -28,6 +29,20 @@ abstract class WordDao {
     @Query("SELECT * FROM words WHERE id = :id")
     abstract suspend fun getWithMeanings(id: Long): WordWithMeanings?
 
+    @Transaction
+    @Query("SELECT * FROM words WHERE id = :id")
+    abstract fun observeWithMeanings(id: Long): Flow<WordWithMeanings?>
+
+    /** Số từ và số từ đã thuộc của từng bộ từ vựng thuộc user — Home hiện thanh tiến độ. */
+    @Query(
+        "SELECT w.bookcaseId AS bookcaseId, COUNT(*) AS total, SUM(w.isMastered) AS mastered " +
+            "FROM words w " +
+            "INNER JOIN bookcases bc ON w.bookcaseId = bc.id " +
+            "INNER JOIN bookshelves bs ON bc.bookshelfId = bs.id " +
+            "WHERE bs.firebaseUid = :uid GROUP BY w.bookcaseId"
+    )
+    abstract fun observeCountsByUser(uid: String): Flow<List<BookcaseWordCount>>
+
     /** Dùng cho ôn tập — chỉ lấy các từ chưa thuộc. */
     @Transaction
     @Query("SELECT * FROM words WHERE bookcaseId = :bookcaseId AND isMastered = 0")
@@ -49,6 +64,19 @@ abstract class WordDao {
 
     @Delete
     abstract suspend fun delete(word: WordEntity)
+
+    @Query("DELETE FROM words WHERE id = :wordId")
+    abstract suspend fun deleteById(wordId: Long)
+
+    @Query("UPDATE words SET bookcaseId = :bookcaseId WHERE id = :wordId")
+    abstract suspend fun moveToBookcase(wordId: Long, bookcaseId: Long)
+
+    @Query("UPDATE words SET createdAt = :millis WHERE id = :wordId")
+    abstract suspend fun setCreatedAt(wordId: Long, millis: Long)
+
+    /** Đảo đã thuộc / chưa thuộc trong 1 câu lệnh (không cần đọc rồi ghi). */
+    @Query("UPDATE words SET isMastered = NOT isMastered WHERE id = :wordId")
+    abstract suspend fun toggleMastered(wordId: Long)
 
     // ---------- Ghi (gộp — dùng cái này ở tầng trên) ----------
 
