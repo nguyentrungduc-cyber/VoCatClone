@@ -13,7 +13,7 @@ import androidx.lifecycle.viewmodel.compose.viewModel
  *
  * @param onAddWord thêm từ vào bộ này (truyền id bộ).
  * @param onOpenWord mở chi tiết một từ.
- * Menu trên từng từ: Sửa đã nối; chuyển bộ, đổi ngày, xóa và đánh dấu đã thuộc được nối ở các PR sau.
+ * Menu trên từng từ: Sửa và Xóa đã nối; chuyển bộ, đổi ngày và đánh dấu đã thuộc được nối ở các PR sau.
  * @param onEditWord mở form sửa một từ.
  */
 @Composable
@@ -39,6 +39,7 @@ fun BookcaseDetailRoute(
         onBack = onBack,
         onAddWord = { onAddWord(bookcaseId) },
         onWordClick = onOpenWord,
-        onEditWord = onEditWord
+        onEditWord = onEditWord,
+        onDeleteWord = viewModel::deleteWord
     )
 }

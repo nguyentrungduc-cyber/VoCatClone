@@ -29,6 +29,7 @@ import com.vocatclone.app.ui.bookcase.BookcaseFormRoute
 import com.vocatclone.app.ui.home.HomeRoute
 import com.vocatclone.app.ui.splash.SplashScreen
 import com.vocatclone.app.ui.welcome.WelcomeScreen
+import com.vocatclone.app.ui.word.WordDetailRoute
 import com.vocatclone.app.ui.word.WordFormRoute
 import kotlinx.coroutines.delay
 
@@ -180,7 +181,11 @@ fun AppNavHost(
             arguments = listOf(navArgument(Routes.ARG_WORD_ID) { type = NavType.LongType })
         ) { entry ->
             val id = entry.arguments?.getLong(Routes.ARG_WORD_ID) ?: NO_ID
-            PlaceholderScreen("Chi tiết từ vựng", "wordId = $id", onBack = { navController.popBackStack() })
+            WordDetailRoute(
+                wordId = id,
+                onBack = { navController.popBackStack() },
+                onEdit = { bookcaseId -> navController.navigate(Routes.wordForm(bookcaseId, id)) }
+            )
         }
 
         composable(
