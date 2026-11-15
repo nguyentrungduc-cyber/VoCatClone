@@ -1,0 +1,18 @@
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="24dp"
+    android:height="24dp"
+    android:viewportWidth="512"
+    android:viewportHeight="512">
+    <!-- Cạnh trái (Xanh lá) -->
+    <path
+        android:fillColor="#34A853"
+        android:pathData="M170.8,455.5 L42.7,233.7 L170.8,11.8 H341.5 L213.4,233.7 Z" />
+    <!-- Cạnh trên (Vàng) -->
+    <path
+        android:fillColor="#FBBC04"
+        android:pathData="M170.8,11.8 L298.9,233.7 H469.3 L341.2,11.8 Z" />
+    <!-- Cạnh đáy (Xanh dương) -->
+    <path
+        android:fillColor="#4285F4"
+        android:pathData="M170.8,455.5 L298.9,233.7 H469.3 L341.2,455.5 Z" />
+</vector>

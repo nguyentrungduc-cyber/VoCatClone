@@ -76,6 +76,7 @@ import kotlin.math.roundToInt
 fun HomeScreen(
     modifier: Modifier = Modifier,
     shelves: List<BookshelfUi> = emptyList(),
+    initialQuery: String = "", // thêm để test khi tìm kiếm sai
     onAddClick: () -> Unit = {},
     onBookcaseClick: (Long) -> Unit = {},
     onBookcaseMenuClick: (Long) -> Unit = {},
@@ -83,10 +84,20 @@ fun HomeScreen(
     onFilterClick: () -> Unit = {},
     onManageShelvesClick: () -> Unit = {}
 ) {
-    var query by rememberSaveable { mutableStateOf("") }
+    // thay đổi giá trị từ rộng + báo động vẽ lại UI, không mất dữ liệu đang nhập khi xoay màn hình
+    // var query by rememberSaveable { mutableStateOf("") } // trước khi thêm initialQuery để test
+    var query by rememberSaveable { mutableStateOf(initialQuery) }
+
     // Các tủ sách đang thu gọn (mặc định mở hết). Lưu theo id để xoay màn hình không mất.
+    //Set<> giúp không bị lặp và truy xuất nhanh chóng
+    // Chỉ gọi ID để tiết kiệm
+    // Lưu ID những bookshelf bị người dùng bấm đóng do mặc định mở hết
     var collapsedShelfIds by rememberSaveable { mutableStateOf<Set<Long>>(emptySet()) }
 
+    // filterShelves: hàm tìm kiếm dựa trên query, trả về danh sách các shelves khớp tên.
+    // bọc trong remember(key1, key2): giúp CACHE (ghi nhớ) KẾT QUẢ lọc.
+    // Khi UI vẽ lại, người dùng gõ lại giống Cache cũ
+    // thì lấy luôn kết quả cũ ra xài chứ không bắt CPU chạy hàm tìm kiếm lại từ đầu.
     val visibleShelves = remember(shelves, query) { filterShelves(shelves, query) }
 
     // Scaffold này nằm TRONG Scaffold của MainApp (đã có bottomBar):
@@ -114,20 +125,31 @@ fun HomeScreen(
             )
 
             when {
+                // Giúp người dùng không bị hoang mang bị chưa có dữ liệu
+                // Hiển thị ra thông báo ra chính giữa màn hình
                 shelves.isEmpty() -> CenteredMessage(
                     title = stringResource(R.string.home_empty_title),
                     message = stringResource(R.string.home_empty_message)
                 )
+                // Nếu có đủ dự liệu mà khi tìm kiem khong duoc thi hien thông báo cho người dùng biết nhap sai
                 visibleShelves.isEmpty() -> CenteredMessage(
                     title = null,
                     message = stringResource(R.string.home_no_results)
                 )
+                // Nếu đủ điều kiện thì hiện thị lên UI nhưng để tiết kiệm RAM
+                // Chỉ hiện thị những thứ trong không gian màn hình, nếu lướt thì xóa vẽ cái khác
                 else -> LazyColumn(
                     modifier = Modifier.fillMaxSize(),
+                    // Ở danh sách cuối chừa chỗ cho Nút Add thay vì nguyên một hàng
                     contentPadding = PaddingValues(bottom = 88.dp)   // chừa chỗ cho nút +
                 ) {
+                    // thực hiện tìm kiếm Bookshelf với shelf ứng mỗi item trong vòng lặp
                     visibleShelves.forEach { shelf ->
+                        // Kiểm tra xem ID của item đó có nằm trong danh sách bị đóng không -> Không(đang mở)->True và ngược lại
                         val expanded = shelf.id !in collapsedShelfIds
+                        // Phân tách để đóng gói thành từng item nhỏ do cơ chế của LazyColum
+                        // Đóng gói Phần hiển thị Bookshelf trước để khi lướt có mất thì khong ảnh hưởng Bookcase
+                        // Do mỗi LazyColumn các item không được trùng ten key nhau nên đặt các tiền tố shelf,bookcase để phân biệt
                         item(key = "shelf-${shelf.id}") {
                             ShelfHeader(
                                 shelf = shelf,
@@ -159,8 +181,13 @@ fun HomeScreen(
 private fun filterShelves(shelves: List<BookshelfUi>, query: String): List<BookshelfUi> {
     val q = query.trim()
     if (q.isEmpty()) return shelves
-    return shelves.mapNotNull { shelf ->
+    // nếu người dùng thật sự gõ tìm kiếm
+    return shelves.mapNotNull { shelf -> // tạo một vòng lặp duyệt hết Bookshelfs nhờ mapNotNull sẽ loại những Bookshelfs nào khong có kết quả thay vì gán Null
+        // Tạo biến matches với kiểu dữ liệu tương ứng với shelf.bookcases(Android tự đoán)
+        // tạo một vòng lặp tìm kiếm các Bookcases nhờ filter
+        // nếu có kết quả thì lưu dù gõ kiểu nào cũng nhận ra
         val matches = shelf.bookcases.filter { it.name.contains(q, ignoreCase = true) }
+        // Sau khi tìm thành công thì hiện thị ra nhưng chỉ copy sau khi xóa filter thì hiện lại đầu đủ
         if (matches.isEmpty()) null else shelf.copy(bookcases = matches)
     }
 }
@@ -168,10 +195,10 @@ private fun filterShelves(shelves: List<BookshelfUi>, query: String): List<Books
 /** Hàng trên cùng: ô tìm kiếm bo tròn, nút lọc/sắp xếp, nút quản lý tủ sách. */
 @Composable
 private fun SearchRow(
-    query: String,
-    onQueryChange: (String) -> Unit,
-    onFilterClick: () -> Unit,
-    onManageShelvesClick: () -> Unit
+    query: String, // nhận dữ liệu từ cha
+    onQueryChange: (String) -> Unit, // tạo đường truyền giữa cha và con, khi dự liệu có thay đổi
+    onFilterClick: () -> Unit, // icon thứ 2
+    onManageShelvesClick: () -> Unit // icon thứ 3
 ) {
     val colors = MaterialTheme.colorScheme
     Row(
@@ -179,7 +206,7 @@ private fun SearchRow(
             .fillMaxWidth()
             .statusBarsPadding()   // app vẽ tràn viền, tránh bị thanh trạng thái đè lên
             .padding(start = 16.dp, end = 4.dp, top = 8.dp, bottom = 8.dp),
-        verticalAlignment = Alignment.CenterVertically
+        verticalAlignment = Alignment.CenterVertically // căn giữa theo trục dọc
     ) {
         TextField(
             value = query,
@@ -417,3 +444,15 @@ private fun HomeScreenDataLightPreview() {
         HomeScreen(shelves = sampleShelves)
     }
 }
+
+@Preview(showBackground = true, name = "Không tìm thấy kết quả", uiMode = Configuration.UI_MODE_NIGHT_YES, widthDp = 390, heightDp = 844)
+@Composable
+private fun HomeScreenNoResultsPreview() {
+    VoCatCloneTheme {
+        HomeScreen(
+            shelves = sampleShelves,
+            initialQuery = "ABC123NotFound"
+        )
+    }
+}
+
