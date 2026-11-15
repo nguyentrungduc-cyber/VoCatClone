@@ -24,9 +24,13 @@ import com.vocatclone.app.MainApp
 import com.vocatclone.app.ui.auth.AuthViewModel
 import com.vocatclone.app.ui.auth.LoginScreen
 import com.vocatclone.app.ui.auth.RegisterScreen
+import com.vocatclone.app.ui.bookcase.BookcaseDetailRoute
+import com.vocatclone.app.ui.bookcase.BookcaseFormRoute
 import com.vocatclone.app.ui.home.HomeRoute
 import com.vocatclone.app.ui.splash.SplashScreen
 import com.vocatclone.app.ui.welcome.WelcomeScreen
+import com.vocatclone.app.ui.word.WordDetailRoute
+import com.vocatclone.app.ui.word.WordFormRoute
 import kotlinx.coroutines.delay
 
 /** Thời gian hiện màn Splash (mili giây). */
@@ -40,7 +44,7 @@ private const val KEY_SEEN_WELCOME = "seen_welcome"
  * - Chưa đăng nhập thì sau Splash/Welcome vào LOGIN; đăng nhập hoặc đăng ký xong vào MAIN (Home)
  *   và xóa các màn đăng nhập khỏi back stack, nên bấm Back ở Home không quay lại màn Login.
  * - Đăng xuất thì về LOGIN và xóa toàn bộ back stack.
- * - Các route có tham số xem ở [Routes]. Route nào chưa có màn nối dữ liệu thì dùng [PlaceholderScreen].
+ * - Các route có tham số xem ở [Routes]; mỗi route nối ViewModel vào màn tương ứng qua một `...Route`.
  */
 @Composable
 fun AppNavHost(
@@ -136,20 +140,27 @@ fun AppNavHost(
                     HomeRoute(
                         modifier = m,
                         onAddBookcase = { navController.navigate(Routes.bookcaseForm()) },
-                        onOpenBookcase = { id -> navController.navigate(Routes.bookcaseDetail(id)) }
+                        onOpenBookcase = { id -> navController.navigate(Routes.bookcaseDetail(id)) },
+                        onEditBookcase = { id -> navController.navigate(Routes.bookcaseForm(id)) }
                     )
                 }
             )
         }
 
-        // ---- Các route có tham số: chưa nối dữ liệu, dùng màn tạm ----
+        // ---- Các route có tham số ----
 
         composable(
             route = Routes.BOOKCASE_DETAIL,
             arguments = listOf(navArgument(Routes.ARG_BOOKCASE_ID) { type = NavType.LongType })
         ) { entry ->
             val id = entry.arguments?.getLong(Routes.ARG_BOOKCASE_ID) ?: NO_ID
-            PlaceholderScreen("Chi tiết bộ từ vựng", "bookcaseId = $id", onBack = { navController.popBackStack() })
+            BookcaseDetailRoute(
+                bookcaseId = id,
+                onBack = { navController.popBackStack() },
+                onAddWord = { bookcaseId -> navController.navigate(Routes.wordForm(bookcaseId)) },
+                onOpenWord = { wordId -> navController.navigate(Routes.wordDetail(wordId)) },
+                onEditWord = { wordId -> navController.navigate(Routes.wordForm(id, wordId)) }
+            )
         }
 
         composable(
@@ -159,8 +170,10 @@ fun AppNavHost(
             )
         ) { entry ->
             val id = entry.arguments?.getLong(Routes.ARG_BOOKCASE_ID) ?: NO_ID
-            val mode = if (id == NO_ID) "Tạo mới" else "Sửa bộ từ vựng $id"
-            PlaceholderScreen("Form bộ từ vựng", mode, onBack = { navController.popBackStack() })
+            BookcaseFormRoute(
+                bookcaseId = id.takeIf { it != NO_ID },
+                onDone = { navController.popBackStack() }
+            )
         }
 
         composable(
@@ -168,7 +181,11 @@ fun AppNavHost(
             arguments = listOf(navArgument(Routes.ARG_WORD_ID) { type = NavType.LongType })
         ) { entry ->
             val id = entry.arguments?.getLong(Routes.ARG_WORD_ID) ?: NO_ID
-            PlaceholderScreen("Chi tiết từ vựng", "wordId = $id", onBack = { navController.popBackStack() })
+            WordDetailRoute(
+                wordId = id,
+                onBack = { navController.popBackStack() },
+                onEdit = { bookcaseId -> navController.navigate(Routes.wordForm(bookcaseId, id)) }
+            )
         }
 
         composable(
@@ -180,8 +197,11 @@ fun AppNavHost(
         ) { entry ->
             val bookcaseId = entry.arguments?.getLong(Routes.ARG_BOOKCASE_ID) ?: NO_ID
             val wordId = entry.arguments?.getLong(Routes.ARG_WORD_ID) ?: NO_ID
-            val mode = if (wordId == NO_ID) "Thêm từ vào bộ $bookcaseId" else "Sửa từ $wordId (bộ $bookcaseId)"
-            PlaceholderScreen("Form từ vựng", mode, onBack = { navController.popBackStack() })
+            WordFormRoute(
+                bookcaseId = bookcaseId,
+                wordId = wordId.takeIf { it != NO_ID },
+                onDone = { navController.popBackStack() }
+            )
         }
     }
 }
