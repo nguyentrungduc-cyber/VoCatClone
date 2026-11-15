@@ -9,17 +9,19 @@ Dự án là bài tập nhóm môn Lập trình Mobile, xây dựng bằng **Kot
 ## Tính năng
 
 ### Nhóm tính năng lõi (bắt buộc)
-- [ ] Quản lý từ vựng: thêm / sửa / xóa / xem chi tiết (từ, nghĩa, loại từ, ví dụ, ảnh minh họa)
-- [ ] Phân loại từ vựng theo chủ đề (bookcase / bộ từ)
-- [ ] Lưu trữ dữ liệu cục bộ bằng SQLite (Room)
-- [ ] Gợi ý nghĩa từ tự động khi thêm từ mới (gọi API dịch/từ điển)
+- [x] Đăng ký / đăng nhập / quên mật khẩu bằng email (Firebase Authentication)
+- [x] Quản lý từ vựng: thêm / sửa / xóa / xem chi tiết (từ, nhiều nghĩa, phiên âm, loại từ, ví dụ, đồng nghĩa); chuyển từ sang bộ khác, đổi ngày tạo
+  - [ ] Ảnh minh họa (form đã có ô ảnh nhưng chưa nối chức năng chọn ảnh)
+- [x] Phân loại từ vựng: tủ sách (bookshelf) → bộ từ (bookcase), có thêm / sửa / xóa
+- [x] Lưu trữ dữ liệu cục bộ bằng SQLite (Room), dữ liệu tách theo tài khoản
+- [ ] Gợi ý nghĩa từ tự động khi thêm từ mới (gọi API dịch/từ điển) — form đã có nút tra, chưa nối API
 - [ ] Đọc phát âm từ vựng bằng Text-to-Speech
 
 ### Nhóm tính năng ôn tập (điểm nhấn)
 - [ ] Chế độ Flashcard (lật thẻ ghi nhớ)
 - [ ] Chế độ trắc nghiệm (Multiple choice)
 - [ ] Chế độ chính tả (Dictation — nghe và gõ lại từ)
-- [ ] Theo dõi tiến độ học (đánh dấu đã thuộc / chưa thuộc, lịch sử ôn tập)
+- [ ] Theo dõi tiến độ học — đã có đánh dấu đã thuộc / chưa thuộc; còn thiếu lịch sử ôn tập
 - [ ] Chế độ Blinker (quiz chớp nhoáng — từ xuất hiện/biến mất trong vài trăm ms, yêu cầu tối ưu hiệu năng UI real-time)
 - [ ] "Làm lại chỉ với các từ trả lời sai" sau mỗi lượt quiz (dùng chung cho mọi chế độ)
 
@@ -35,14 +37,15 @@ Dự án là bài tập nhóm môn Lập trình Mobile, xây dựng bằng **Kot
 | Thành phần | Công nghệ |
 |---|---|
 | Ngôn ngữ | Kotlin |
-| UI | Jetpack Compose |
-| Kiến trúc | MVVM |
-| Cơ sở dữ liệu cục bộ | Room (SQLite) |
-| Xác thực | Firebase Authentication |
+| UI | Jetpack Compose + Material 3 |
+| Kiến trúc | MVVM (Repository + ViewModel) |
+| Cơ sở dữ liệu cục bộ | Room (SQLite), sinh code bằng KSP |
+| Xác thực | Firebase Authentication (email/mật khẩu) |
 | Điều hướng | Navigation Compose |
 | Bất đồng bộ | Kotlin Coroutines / Flow |
-| Text-to-Speech | Android TTS Engine |
-| Build | Gradle (Kotlin DSL) |
+| Build | Gradle 8.9 (Kotlin DSL, version catalog), AGP 8.6 |
+
+Dự kiến dùng thêm: Android TTS Engine (phát âm), API từ điển (gợi ý nghĩa).
 
 ## Hướng dẫn cài đặt
 
@@ -87,53 +90,51 @@ Dự án là bài tập nhóm môn Lập trình Mobile, xây dựng bằng **Kot
 
 ### Firebase
 
-File `app/google-services.json` của project Firebase `vocat-clone-nhom18` đã có sẵn trong repo. Để đăng nhập chạy được trên máy của mình, thêm SHA-1 của debug keystore vào Firebase Console (Project settings → Your apps → Add fingerprint). Lấy SHA-1 bằng:
-
-```bash
-./gradlew signingReport
-```
-
-### Cấu hình API (tùy chọn)
-
-Nếu dùng tính năng gợi ý nghĩa từ tự động, tạo file `local.properties` ở thư mục gốc (file này đã nằm trong `.gitignore`, không commit lên git):
-
-```properties
-DICTIONARY_API_KEY=your_api_key_here
-```
+File `app/google-services.json` của project Firebase `vocat-clone-nhom18` đã có sẵn trong repo, clone về là chạy được. App hiện chỉ dùng đăng nhập email/mật khẩu nên **không cần** thêm SHA-1. Chỉ khi bổ sung Google Sign-In mới phải thêm SHA-1 của debug keystore vào Firebase Console (lấy bằng `./gradlew signingReport`).
 
 ## Cách sử dụng
 
-1. Mở ứng dụng, tạo **bộ từ vựng** mới (ví dụ: "Từ vựng TOEIC Unit 1")
-2. Thêm từ vào bộ: nhập từ tiếng Anh, ứng dụng gợi ý nghĩa và ví dụ tự động
-3. Nhấn biểu tượng loa để nghe phát âm
-4. Vào mục **Ôn tập**, chọn chế độ: Flashcard / Trắc nghiệm / Chính tả
-5. Theo dõi tiến độ học trong tab **Thống kê**
+1. Mở ứng dụng: Splash → màn Welcome (chỉ lần đầu) → **Đăng nhập** hoặc **Đăng ký** bằng email
+2. Tab **Vocabulary**: tạo **bộ từ vựng** mới (ví dụ: "Từ vựng TOEIC Unit 1") trong tủ sách
+3. Mở bộ từ → thêm từ: nhập từ tiếng Anh, các nghĩa tiếng Việt, phiên âm, loại từ, ví dụ...
+4. Mở chi tiết từ để sửa, xóa, đánh dấu đã thuộc hoặc chuyển sang bộ khác
+5. Tab **My**: xem tài khoản, đăng xuất
+
+Các tab **Add**, **Quiz**, **Calendar** hiện mới là placeholder. Ở bản debug, khi chưa có dữ liệu, tab Vocabulary có nút nạp dữ liệu mẫu.
 
 ## Cấu trúc thư mục
 
 ```
 app/src/main/java/com/vocatclone/app/
-├── MainActivity.kt          # Entry point — Scaffold + thanh điều hướng dưới
+├── MainActivity.kt          # Entry point (gọi AppNavHost) + MainApp: Scaffold + thanh điều hướng dưới
 ├── data/
-│   └── local/
-│       ├── AppDatabase.kt   # Room database (singleton)
-│       ├── entity/          # Bookshelf, Bookcase, Word, WordMeaning (+ WordWithMeanings)
-│       └── dao/             # BookshelfDao, BookcaseDao, WordDao
+│   ├── local/
+│   │   ├── AppDatabase.kt   # Room database (singleton, version 3)
+│   │   ├── entity/          # Bookshelf, Bookcase, Word, WordMeaning (+ WordWithMeanings, BookcaseWordCount)
+│   │   └── dao/             # BookshelfDao, BookcaseDao, WordDao
+│   ├── repository/          # Auth, Bookshelf, Bookcase, Word repository; OwnershipGuard (kiểm tra quyền sở hữu theo uid)
+│   └── seed/                # SampleData — dữ liệu mẫu cho bản debug
 └── ui/
-    ├── auth/                # LoginActivity, RegisterActivity + màn hình, AuthViewModel (Firebase Auth)
-    ├── components/          # VoCatBottomBar (5 tab)
-    ├── home/                # Tab "Từ Vựng" — danh sách tủ sách / bộ từ
-    ├── profile/             # Tab "Của tôi"
+    ├── navigation/          # Routes, AppNavHost (Splash → Welcome → Login/Register → Main)
+    ├── splash/, welcome/    # Màn khởi động và giới thiệu lần đầu
+    ├── auth/                # Màn Login/Register, AuthViewModel (Firebase Auth)
+    ├── components/          # VoCatBottomBar (5 tab), logo, mascot
+    ├── home/                # Tab "Vocabulary" — danh sách tủ sách / bộ từ
+    ├── bookcase/            # Chi tiết bộ từ (danh sách từ), form tạo/sửa bộ từ
+    ├── word/                # Chi tiết từ, form thêm/sửa từ, menu thao tác
+    ├── profile/             # Tab "My"
     └── theme/               # Color, Theme, Type
 ```
 
+Schema Room được xuất ra `app/schemas/` để review khi có migration.
+
 Quan hệ dữ liệu: `bookshelves 1-n bookcases 1-n words 1-n word_meanings`. Không có bảng Users — người dùng được xác thực bằng Firebase Auth, dữ liệu lọc theo cột `firebaseUid` của bảng `bookshelves`.
 
-Dự kiến bổ sung: `data/repository/`, `ui/bookcase/`, `ui/word/`, `ui/quiz/`, `ui/settings/`.
+Dự kiến bổ sung: `ui/quiz/`, `ui/settings/`.
 
 ## Đóng góp
 
-1. Fork repository này
+1. Cập nhật `main` mới nhất: `git checkout main && git pull`
 2. Tạo nhánh feature mới: `git checkout -b feature/ten-tinh-nang`
 3. Commit thay đổi: `git commit -m "feat: mô tả ngắn gọn"`
 4. Push lên nhánh: `git push origin feature/ten-tinh-nang`
