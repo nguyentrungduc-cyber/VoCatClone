@@ -2,6 +2,7 @@ package com.vocatclone.app.ui.home
 
 import android.content.pm.ApplicationInfo
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.OutlinedButton
@@ -10,8 +11,8 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.setValue
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
@@ -19,6 +20,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.vocatclone.app.R
+import com.vocatclone.app.ui.auth.EmailVerificationBanner
 
 /**
  * Nối [HomeViewModel] vào [HomeScreen]: danh sách tủ sách và bộ từ vựng của tài khoản đang đăng nhập,
@@ -43,22 +45,27 @@ fun HomeRoute(
     // Hộp thoại đang mở (mỗi lúc chỉ một). Lưu id, không lưu cả đối tượng, để dữ liệu luôn mới nhất.
     var dialog by remember { mutableStateOf<HomeDialog>(HomeDialog.None) }
 
-    Box(modifier = modifier) {
-        HomeScreen(
-            modifier = Modifier.fillMaxSize(),
-            shelves = shelves,
-            onAddClick = onAddBookcase,
-            onBookcaseClick = onOpenBookcase,
-            onBookcaseMenuClick = { dialog = HomeDialog.BookcaseActions(it) },
-            onShelfMenuClick = { dialog = HomeDialog.ShelfActions(it) },
-            onManageShelvesClick = { dialog = HomeDialog.NewShelf }
-        )
-        if (isDebuggable && shelves.isEmpty()) {
-            OutlinedButton(
-                onClick = viewModel::seedSampleData,
-                modifier = Modifier.align(Alignment.BottomStart).padding(start = 16.dp, bottom = 24.dp)
-            ) {
-                Text("Thêm dữ liệu mẫu (debug)")
+    Column(modifier = modifier) {
+        // Nhắc xác thực email, chỉ hiện khi tài khoản chưa xác thực. Không chặn dùng app.
+        EmailVerificationBanner()
+
+        Box(modifier = Modifier.weight(1f)) {
+            HomeScreen(
+                modifier = Modifier.fillMaxSize(),
+                shelves = shelves,
+                onAddClick = onAddBookcase,
+                onBookcaseClick = onOpenBookcase,
+                onBookcaseMenuClick = { dialog = HomeDialog.BookcaseActions(it) },
+                onShelfMenuClick = { dialog = HomeDialog.ShelfActions(it) },
+                onManageShelvesClick = { dialog = HomeDialog.NewShelf }
+            )
+            if (isDebuggable && shelves.isEmpty()) {
+                OutlinedButton(
+                    onClick = viewModel::seedSampleData,
+                    modifier = Modifier.align(Alignment.BottomStart).padding(start = 16.dp, bottom = 24.dp)
+                ) {
+                    Text("Thêm dữ liệu mẫu (debug)")
+                }
             }
         }
     }
