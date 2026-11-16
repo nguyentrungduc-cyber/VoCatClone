@@ -48,7 +48,12 @@ class AuthViewModel : ViewModel() {
         _uiState.update { it.copy(isLoading = true, errorMessage = null, infoMessage = null) }
         // Tạo tài khoản thành công thì Firebase tự đăng nhập luôn.
         auth.createUserWithEmailAndPassword(email.trim(), password)
-            .addOnSuccessListener { _uiState.update { it.copy(isLoading = false, isSuccess = true) } }
+            .addOnSuccessListener {
+                // Gửi email xác thực ngay. Không chờ kết quả: người dùng vẫn vào được app,
+                // màn Home có dải nhắc kèm nút Gửi lại (xem EmailVerificationBanner).
+                auth.currentUser?.sendEmailVerification()
+                _uiState.update { it.copy(isLoading = false, isSuccess = true) }
+            }
             .addOnFailureListener { e -> _uiState.update { it.copy(isLoading = false, errorMessage = e.toVietnamese()) } }
     }
 
