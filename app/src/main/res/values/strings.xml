@@ -125,4 +125,12 @@
     <string name="mg_error_title">Could not save</string>
     <string name="mg_ok">OK</string>
     <string name="wf_added">Word added</string>
+    <!-- Dải nhắc xác thực email trên màn Home -->
+    <string name="ev_title">Hãy xác thực email của bạn</string>
+    <string name="ev_message">Mở hộp thư và bấm vào link xác thực. Nếu không thấy, kiểm tra mục spam.</string>
+    <string name="ev_message_with_email">Link xác thực đã gửi tới %1$s. Nếu không thấy, kiểm tra mục spam.</string>
+    <string name="ev_resend">Gửi lại</string>
+    <string name="ev_sending">Đang gửi lại email xác thực…</string>
+    <string name="ev_sent">Đã gửi lại. Kiểm tra hộp thư của bạn.</string>
+    <string name="ev_send_failed">Chưa gửi được. Kiểm tra mạng rồi thử lại.</string>
 </resources>
