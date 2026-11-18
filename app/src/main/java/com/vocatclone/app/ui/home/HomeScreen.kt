@@ -56,6 +56,7 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -70,13 +71,18 @@ import kotlin.math.roundToInt
  * nên xem trước được bằng Preview mà không cần database. Khi nối dữ liệu thật,
  * ViewModel/Repository chỉ cần cấp [shelves] và xử lý các sự kiện `on...Click`.
  *
- * Tìm kiếm ở đây lọc theo TÊN bộ từ vựng ngay trên danh sách đang có.
+ * Ô tìm kiếm làm hai việc: lọc theo TÊN bộ từ vựng ngay trên danh sách đang có, và báo chữ đang gõ
+ * ra ngoài qua [onQueryChange] để ViewModel tìm TỪ trong database rồi trả về [wordResults].
  */
 @Composable
 fun HomeScreen(
     modifier: Modifier = Modifier,
     shelves: List<BookshelfUi> = emptyList(),
     initialQuery: String = "", // thêm để test khi tìm kiếm sai
+    /** Các từ khớp ô tìm kiếm (do ViewModel truy vấn trong database). Rỗng khi chưa gõ gì. */
+    wordResults: List<WordSearchUi> = emptyList(),
+    onQueryChange: (String) -> Unit = {},
+    onWordClick: (Long) -> Unit = {},
     onAddClick: () -> Unit = {},
     onBookcaseClick: (Long) -> Unit = {},
     onBookcaseMenuClick: (Long) -> Unit = {},
@@ -119,7 +125,7 @@ fun HomeScreen(
         ) {
             SearchRow(
                 query = query,
-                onQueryChange = { query = it },
+                onQueryChange = { query = it; onQueryChange(it) },
                 onFilterClick = onFilterClick,
                 onManageShelvesClick = onManageShelvesClick
             )
@@ -132,7 +138,8 @@ fun HomeScreen(
                     message = stringResource(R.string.home_empty_message)
                 )
                 // Nếu có đủ dự liệu mà khi tìm kiem khong duoc thi hien thông báo cho người dùng biết nhap sai
-                visibleShelves.isEmpty() -> CenteredMessage(
+                // Không có bộ nào khớp VÀ cũng không có từ nào khớp thì mới báo không tìm thấy.
+                visibleShelves.isEmpty() && wordResults.isEmpty() -> CenteredMessage(
                     title = null,
                     message = stringResource(R.string.home_no_results)
                 )
@@ -143,6 +150,21 @@ fun HomeScreen(
                     // Ở danh sách cuối chừa chỗ cho Nút Add thay vì nguyên một hàng
                     contentPadding = PaddingValues(bottom = 88.dp)   // chừa chỗ cho nút +
                 ) {
+                    // Kết quả tìm TỪ đứng trước, vì người dùng gõ ô tìm kiếm thường là đang tìm một từ.
+                    if (wordResults.isNotEmpty()) {
+                        item(key = "words-header") {
+                            SectionHeader(stringResource(R.string.home_results_words, wordResults.size))
+                        }
+                        items(items = wordResults, key = { "word-${it.id}" }) { word ->
+                            WordResultRow(word = word, onClick = { onWordClick(word.id) })
+                        }
+                        if (visibleShelves.isNotEmpty()) {
+                            item(key = "bookcases-header") {
+                                SectionHeader(stringResource(R.string.home_results_bookcases))
+                            }
+                        }
+                    }
+
                     // thực hiện tìm kiếm Bookshelf với shelf ứng mỗi item trong vòng lặp
                     visibleShelves.forEach { shelf ->
                         // Kiểm tra xem ID của item đó có nằm trong danh sách bị đóng không -> Không(đang mở)->True và ngược lại
@@ -173,6 +195,51 @@ fun HomeScreen(
                     }
                 }
             }
+        }
+    }
+}
+
+/** Tiêu đề nhỏ phân nhóm kết quả tìm kiếm ("Từ vựng" / "Bộ từ vựng"). */
+@Composable
+private fun SectionHeader(text: String) {
+    Text(
+        text = text,
+        style = MaterialTheme.typography.labelLarge,
+        color = MaterialTheme.colorScheme.onSurfaceVariant,
+        modifier = Modifier.padding(start = 16.dp, end = 16.dp, top = 16.dp, bottom = 4.dp)
+    )
+}
+
+/** Một dòng kết quả tìm từ: từ ở trên, các nghĩa và tên bộ chứa nó ở dưới. */
+@Composable
+private fun WordResultRow(word: WordSearchUi, onClick: () -> Unit) {
+    Column(
+        modifier = Modifier
+            .fillMaxWidth()
+            .clickable(onClick = onClick)
+            .padding(horizontal = 16.dp, vertical = 10.dp)
+    ) {
+        Text(
+            text = word.term,
+            style = MaterialTheme.typography.bodyLarge,
+            fontWeight = FontWeight.SemiBold,
+            color = MaterialTheme.colorScheme.onBackground
+        )
+        if (word.meanings.isNotEmpty()) {
+            Text(
+                text = word.meanings.joinToString(", "),
+                style = MaterialTheme.typography.bodyMedium,
+                color = MaterialTheme.colorScheme.onSurfaceVariant,
+                maxLines = 1,
+                overflow = TextOverflow.Ellipsis
+            )
+        }
+        if (word.bookcaseName.isNotEmpty()) {
+            Text(
+                text = word.bookcaseName,
+                style = MaterialTheme.typography.labelSmall,
+                color = MaterialTheme.colorScheme.onSurfaceVariant
+            )
         }
     }
 }

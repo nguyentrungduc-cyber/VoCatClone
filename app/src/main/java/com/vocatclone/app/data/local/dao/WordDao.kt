@@ -53,6 +53,25 @@ abstract class WordDao {
     abstract suspend fun countOwned(wordId: Long, uid: String): Int
 
     /** Dùng cho ôn tập — chỉ lấy các từ chưa thuộc. */
+    /**
+     * Tìm từ của user [uid] theo [pattern] (đã bọc sẵn dấu %), khớp cả Ở TỪ lẫn Ở NGHĨA.
+     *
+     * LEFT JOIN sang word_meanings để gõ tiếng Việt cũng ra kết quả; DISTINCT vì một từ nhiều nghĩa
+     * sẽ sinh nhiều dòng. ESCAPE '\\' để người dùng gõ % hoặc _ thì tìm đúng ký tự đó.
+     * LIMIT để ô tìm kiếm không phải vẽ hàng nghìn dòng.
+     */
+    @Transaction
+    @Query(
+        "SELECT DISTINCT w.* FROM words w " +
+            "INNER JOIN bookcases bc ON w.bookcaseId = bc.id " +
+            "INNER JOIN bookshelves bs ON bc.bookshelfId = bs.id " +
+            "LEFT JOIN word_meanings m ON m.wordId = w.id " +
+            "WHERE bs.firebaseUid = :uid " +
+            "AND (w.term LIKE :pattern ESCAPE '\\' OR m.meaning LIKE :pattern ESCAPE '\\') " +
+            "ORDER BY w.term COLLATE NOCASE ASC LIMIT :limit"
+    )
+    abstract fun searchByUser(uid: String, pattern: String, limit: Int): Flow<List<WordWithMeanings>>
+
     @Transaction
     @Query("SELECT * FROM words WHERE bookcaseId = :bookcaseId AND isMastered = 0")
     abstract suspend fun getUnmastered(bookcaseId: Long): List<WordWithMeanings>

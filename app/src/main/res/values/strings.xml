@@ -133,4 +133,6 @@
     <string name="ev_sending">Đang gửi lại email xác thực…</string>
     <string name="ev_sent">Đã gửi lại. Kiểm tra hộp thư của bạn.</string>
     <string name="ev_send_failed">Chưa gửi được. Kiểm tra mạng rồi thử lại.</string>
+    <string name="home_results_words">Từ vựng (%1$d)</string>
+    <string name="home_results_bookcases">Bộ từ vựng</string>
 </resources>

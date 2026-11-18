@@ -8,6 +8,7 @@ import com.vocatclone.app.ui.word.WordFormValues
 import com.vocatclone.app.ui.word.canSubmit
 import com.vocatclone.app.ui.word.cleanMeanings
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.flow.map
 
 /** Từ vựng và các nghĩa của nó. Mọi thao tác ghi đi qua [WordDao] (có transaction cho từ + nghĩa). */
@@ -22,6 +23,16 @@ class WordRepository(
 
     fun observeWords(bookcaseId: Long): Flow<List<WordItemUi>> =
         dao.getByBookcase(bookcaseId).map { list -> list.map { it.toItemUi() } }
+
+    /**
+     * Tìm từ theo [query], khớp cả ở từ lẫn ở nghĩa, chỉ trong dữ liệu của [uid].
+     * [query] rỗng trả về danh sách rỗng (ô tìm kiếm chưa gõ gì thì không hiện kết quả).
+     */
+    fun searchWords(uid: String, query: String, limit: Int = SEARCH_LIMIT): Flow<List<WordWithMeanings>> {
+        val clean = query.trim()
+        if (clean.isEmpty()) return flowOf(emptyList())
+        return dao.searchByUser(uid, "%${clean.escapeLike()}%", limit)
+    }
 
     fun observeDetail(wordId: Long): Flow<WordDetailUi?> =
         dao.observeWithMeanings(wordId).map { it?.toDetailUi() }
@@ -93,4 +104,13 @@ class WordRepository(
         guard.requireWord(wordId)
         dao.deleteById(wordId)
     }
+
+    private companion object {
+        /** Số kết quả tìm kiếm tối đa; đủ dùng cho ô tìm kiếm mà không phải vẽ cả nghìn dòng. */
+        const val SEARCH_LIMIT = 50
+    }
 }
+
+/** Thoát ký tự đại diện của LIKE, để gõ % hay _ thì tìm đúng ký tự đó (khớp với ESCAPE trong câu @Query). */
+private fun String.escapeLike(): String =
+    replace("\\", "\\\\").replace("%", "\\%").replace("_", "\\_")
