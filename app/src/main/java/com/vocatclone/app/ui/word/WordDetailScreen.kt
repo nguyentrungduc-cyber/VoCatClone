@@ -21,7 +21,6 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.automirrored.outlined.VolumeUp
 import androidx.compose.material.icons.outlined.Edit
-import androidx.compose.material.icons.outlined.Image
 import androidx.compose.material.icons.outlined.Pets
 import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -37,6 +36,7 @@ import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
@@ -44,6 +44,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import coil.compose.AsyncImage
 import com.vocatclone.app.R
 import com.vocatclone.app.ui.home.BookshelfUi
 import com.vocatclone.app.ui.theme.VoCatCloneTheme
@@ -126,23 +127,18 @@ fun WordDetailScreen(
                 .verticalScroll(rememberScrollState())
                 .padding(horizontal = 24.dp, vertical = 8.dp)
         ) {
-            // ----- Ảnh (giữ chỗ) -----
+            // ----- Ảnh minh họa -----
             if (word.imageUri != null) {
-                Box(
+                AsyncImage(
+                    model = word.imageUri,
+                    contentDescription = stringResource(R.string.wd_image),
+                    contentScale = ContentScale.Crop,
                     modifier = Modifier
                         .fillMaxWidth()
                         .height(180.dp)
                         .clip(RoundedCornerShape(16.dp))
-                        .background(colors.surfaceVariant),
-                    contentAlignment = Alignment.Center
-                ) {
-                    Icon(
-                        imageVector = Icons.Outlined.Image,
-                        contentDescription = stringResource(R.string.wd_image),
-                        tint = colors.onSurfaceVariant,
-                        modifier = Modifier.size(48.dp)
-                    )
-                }
+                        .background(colors.surfaceVariant)
+                )
                 Spacer(Modifier.height(16.dp))
             }
 

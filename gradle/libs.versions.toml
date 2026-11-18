@@ -12,6 +12,7 @@ coroutines = "1.9.0"
 lifecycleViewmodelCompose = "2.8.6"
 googleServices = "4.5.0"
 firebaseBom = "33.5.1"
+coil = "2.7.0"
 junit = "4.13.2"
 androidxJunit = "1.2.1"
 espressoCore = "3.6.1"
@@ -40,6 +41,9 @@ kotlinx-coroutines-android = { group = "org.jetbrains.kotlinx", name = "kotlinx-
 # Firebase
 firebase-bom = { group = "com.google.firebase", name = "firebase-bom", version.ref = "firebaseBom" }
 firebase-auth = { group = "com.google.firebase", name = "firebase-auth" }
+
+# Coil — tải và hiển thị ảnh minh họa của từ vựng
+coil-compose = { group = "io.coil-kt", name = "coil-compose", version.ref = "coil" }
 
 # Testing
 junit = { group = "junit", name = "junit", version.ref = "junit" }
