@@ -70,9 +70,13 @@ fun WordFormRoute(
             wordLanguage = state.wordLanguage,
             meaningLanguage = state.meaningLanguage,
             isEditing = state.isEditing,
+            suggestions = state.suggestions,
+            isLookingUp = state.isLookingUp,
+            lookupError = state.lookupError,
             onBack = onDone,
             onSubmit = viewModel::submit,
-            onPickImage = { showImageSourceDialog = true }
+            onPickImage = { showImageSourceDialog = true },
+            onLookup = viewModel::lookup
         )
     }
 
