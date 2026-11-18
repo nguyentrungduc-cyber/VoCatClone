@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  Thư mục được phép chia sẻ qua FileProvider. Chỉ mở đúng thư mục ảnh từ vựng
+  nằm trong bộ nhớ riêng của app, để app camera ghi ảnh chụp vào đó.
+-->
+<paths>
+    <files-path name="word_images" path="word_images/" />
+</paths>

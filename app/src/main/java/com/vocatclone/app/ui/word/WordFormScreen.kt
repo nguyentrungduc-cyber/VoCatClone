@@ -26,7 +26,6 @@ import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.outlined.AddPhotoAlternate
 import androidx.compose.material.icons.outlined.Close
-import androidx.compose.material.icons.outlined.Image
 import androidx.compose.material.icons.outlined.Search
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.CenterAlignedTopAppBar
@@ -51,12 +50,14 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import coil.compose.AsyncImage
 import com.vocatclone.app.R
 import com.vocatclone.app.ui.theme.VoCatCloneTheme
 
@@ -168,7 +169,7 @@ fun WordFormScreen(
             // ----- Ảnh minh họa -----
             if (shown(WordField.IMAGE)) {
                 ImagePickerBox(
-                    hasImage = values.imageUri != null,
+                    imageUri = values.imageUri,
                     onPick = onPickImage,
                     onClear = { onValuesChange(values.copy(imageUri = null)) }
                 )
@@ -334,7 +335,7 @@ fun WordFormScreen(
 
 /** Ô thêm ảnh: bấm để chọn ảnh; khi đã có ảnh thì hiện khung ảnh (giữ chỗ) kèm nút xóa. */
 @Composable
-private fun ImagePickerBox(hasImage: Boolean, onPick: () -> Unit, onClear: () -> Unit) {
+private fun ImagePickerBox(imageUri: String?, onPick: () -> Unit, onClear: () -> Unit) {
     val colors = MaterialTheme.colorScheme
     Box {
         Box(
@@ -345,14 +346,23 @@ private fun ImagePickerBox(hasImage: Boolean, onPick: () -> Unit, onClear: () ->
                 .clickable(onClick = onPick),
             contentAlignment = Alignment.Center
         ) {
-            Icon(
-                imageVector = if (hasImage) Icons.Outlined.Image else Icons.Outlined.AddPhotoAlternate,
-                contentDescription = stringResource(R.string.wf_image_add),
-                tint = colors.onSurfaceVariant,
-                modifier = Modifier.size(36.dp)
-            )
+            if (imageUri != null) {
+                AsyncImage(
+                    model = imageUri,
+                    contentDescription = stringResource(R.string.wf_image_add),
+                    contentScale = ContentScale.Crop,
+                    modifier = Modifier.fillMaxSize()
+                )
+            } else {
+                Icon(
+                    imageVector = Icons.Outlined.AddPhotoAlternate,
+                    contentDescription = stringResource(R.string.wf_image_add),
+                    tint = colors.onSurfaceVariant,
+                    modifier = Modifier.size(36.dp)
+                )
+            }
         }
-        if (hasImage) {
+        if (imageUri != null) {
             IconButton(
                 onClick = onClear,
                 modifier = Modifier

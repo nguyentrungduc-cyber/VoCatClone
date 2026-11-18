@@ -8,9 +8,13 @@ import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
+import androidx.compose.foundation.layout.Column
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
@@ -39,6 +43,9 @@ fun WordFormRoute(
     val context = LocalContext.current
     val state by viewModel.state.collectAsState()
 
+    val imagePicker = rememberWordImagePicker(onPicked = viewModel::onImagePicked)
+    var showImageSourceDialog by remember { mutableStateOf(false) }
+
     LaunchedEffect(bookcaseId, wordId) { viewModel.start(bookcaseId, wordId) }
     LaunchedEffect(state.isSaved) { if (state.isSaved) onDone() }
 
@@ -64,7 +71,33 @@ fun WordFormRoute(
             meaningLanguage = state.meaningLanguage,
             isEditing = state.isEditing,
             onBack = onDone,
-            onSubmit = viewModel::submit
+            onSubmit = viewModel::submit,
+            onPickImage = { showImageSourceDialog = true }
+        )
+    }
+
+    if (showImageSourceDialog) {
+        AlertDialog(
+            onDismissRequest = { showImageSourceDialog = false },
+            title = { Text(stringResource(R.string.wf_image_source_title)) },
+            text = {
+                Column {
+                    TextButton(onClick = {
+                        showImageSourceDialog = false
+                        imagePicker.takePhoto()
+                    }) { Text(stringResource(R.string.wf_image_camera)) }
+                    TextButton(onClick = {
+                        showImageSourceDialog = false
+                        imagePicker.pickFromGallery()
+                    }) { Text(stringResource(R.string.wf_image_gallery)) }
+                }
+            },
+            confirmButton = {},
+            dismissButton = {
+                TextButton(onClick = { showImageSourceDialog = false }) {
+                    Text(stringResource(R.string.mg_cancel))
+                }
+            }
         )
     }
 

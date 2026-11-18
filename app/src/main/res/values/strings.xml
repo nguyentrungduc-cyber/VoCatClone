@@ -135,4 +135,7 @@
     <string name="ev_send_failed">Chưa gửi được. Kiểm tra mạng rồi thử lại.</string>
     <string name="home_results_words">Từ vựng (%1$d)</string>
     <string name="home_results_bookcases">Bộ từ vựng</string>
+    <string name="wf_image_source_title">Ảnh minh họa</string>
+    <string name="wf_image_camera">Chụp ảnh</string>
+    <string name="wf_image_gallery">Chọn từ thư viện</string>
 </resources>

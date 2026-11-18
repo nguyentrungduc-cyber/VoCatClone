@@ -3,6 +3,7 @@ package com.vocatclone.app.ui.word
 import android.app.Application
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
+import com.vocatclone.app.data.image.WordImageStore
 import com.vocatclone.app.data.local.AppDatabase
 import com.vocatclone.app.data.repository.BookcaseRepository
 import com.vocatclone.app.data.repository.WordRepository
@@ -40,6 +41,12 @@ class WordFormViewModel(application: Application) : AndroidViewModel(application
     private val _state = MutableStateFlow(WordFormState())
     val state: StateFlow<WordFormState> = _state.asStateFlow()
 
+    /**
+     * Những file ảnh do CHÍNH lần mở form này tạo ra. Chỉ xóa file trong tập này khi bị thay hoặc bỏ,
+     * để không bao giờ xóa nhầm ảnh cũ của một từ mà người dùng có thể bấm Back không lưu.
+     */
+    private val imagesAddedHere = mutableSetOf<String>()
+
     private var bookcaseId = -1L
     private var editingWordId: Long? = null
     private var started = false
@@ -67,7 +74,22 @@ class WordFormViewModel(application: Application) : AndroidViewModel(application
         }
     }
 
-    fun onValuesChange(values: WordFormValues) = _state.update { it.copy(values = values) }
+    fun onValuesChange(values: WordFormValues) {
+        val old = _state.value.values.imageUri
+        // Người dùng bỏ ảnh (nút x): dọn file nếu ảnh đó vừa được thêm trong lần mở form này.
+        if (old != null && old != values.imageUri && imagesAddedHere.remove(old)) {
+            WordImageStore.delete(old)
+        }
+        _state.update { it.copy(values = values) }
+    }
+
+    /** Người dùng vừa chụp hoặc chọn xong một ảnh; [path] đã nằm trong bộ nhớ riêng của app. */
+    fun onImagePicked(path: String) {
+        val old = _state.value.values.imageUri
+        if (old != null && imagesAddedHere.remove(old)) WordImageStore.delete(old)
+        imagesAddedHere.add(path)
+        _state.update { it.copy(values = it.values.copy(imageUri = path)) }
+    }
 
     fun onVisibleFieldsChange(fields: Set<WordField>) = _state.update { it.copy(visibleFields = fields) }
 

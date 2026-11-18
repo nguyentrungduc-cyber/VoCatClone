@@ -26,7 +26,6 @@ import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.automirrored.outlined.VolumeUp
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.outlined.Book
-import androidx.compose.material.icons.outlined.Image
 import androidx.compose.material.icons.outlined.Pets
 import androidx.compose.material.icons.outlined.Search
 import androidx.compose.material.icons.outlined.Tune
@@ -49,6 +48,7 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
@@ -57,6 +57,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import coil.compose.AsyncImage
 import com.vocatclone.app.R
 import com.vocatclone.app.ui.home.BookshelfUi
 import com.vocatclone.app.ui.theme.VoCatCloneTheme
@@ -77,8 +78,7 @@ import java.util.Locale
  * Màn hình CHỈ vẽ giao diện: không gọi database. Dữ liệu và sự kiện truyền từ ngoài vào (state hoisting).
  * Tìm kiếm lọc ngay trên danh sách đang có, theo từ hoặc theo nghĩa.
  *
- * Lưu ý về ảnh: dự án chưa có thư viện tải ảnh (Coil...). Từ có [WordItemUi.imageUri] hiện chỉ
- * hiện khung ảnh giữ chỗ; khi thêm thư viện thì thay khung đó bằng ảnh thật.
+ * Ảnh minh họa được tải bằng Coil từ đường dẫn file trong bộ nhớ riêng của app.
  *
  * Màn này là một màn đầy đủ (có Scaffold riêng). Nếu đặt vào trong MainApp (đã có thanh tab dưới)
  * thì cần xử lý lề (inset) giống cách HomeScreen đang làm.
@@ -273,18 +273,18 @@ private fun WordCard(
                 )
             }
 
-            // Ảnh (giữ chỗ), từ, phiên âm, loại từ
+            // Ảnh minh họa, từ, phiên âm, loại từ
             Row(modifier = Modifier.padding(end = 12.dp), verticalAlignment = Alignment.Top) {
                 if (word.imageUri != null) {
-                    Box(
+                    AsyncImage(
+                        model = word.imageUri,
+                        contentDescription = null,
+                        contentScale = ContentScale.Crop,
                         modifier = Modifier
                             .size(64.dp)
                             .clip(RoundedCornerShape(12.dp))
-                            .background(colors.surfaceVariant),
-                        contentAlignment = Alignment.Center
-                    ) {
-                        Icon(Icons.Outlined.Image, contentDescription = null, tint = colors.onSurfaceVariant)
-                    }
+                            .background(colors.surfaceVariant)
+                    )
                     Spacer(Modifier.width(12.dp))
                 }
                 Column(modifier = Modifier.weight(1f)) {
