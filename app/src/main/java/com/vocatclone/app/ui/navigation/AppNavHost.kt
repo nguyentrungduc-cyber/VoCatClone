@@ -141,7 +141,8 @@ fun AppNavHost(
                         modifier = m,
                         onAddBookcase = { navController.navigate(Routes.bookcaseForm()) },
                         onOpenBookcase = { id -> navController.navigate(Routes.bookcaseDetail(id)) },
-                        onEditBookcase = { id -> navController.navigate(Routes.bookcaseForm(id)) }
+                        onEditBookcase = { id -> navController.navigate(Routes.bookcaseForm(id)) },
+                        onOpenWord = { wordId -> navController.navigate(Routes.wordDetail(wordId)) }
                     )
                 }
             )

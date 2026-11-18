@@ -34,9 +34,11 @@ fun HomeRoute(
     onAddBookcase: () -> Unit = {},
     onOpenBookcase: (bookcaseId: Long) -> Unit = {},
     onEditBookcase: (bookcaseId: Long) -> Unit = {},
+    onOpenWord: (wordId: Long) -> Unit = {},
     viewModel: HomeViewModel = viewModel()
 ) {
     val shelves by viewModel.shelves.collectAsState()
+    val searchResults by viewModel.searchResults.collectAsState()
 
     // Nút seed chỉ hiện ở bản debug và khi chưa có dữ liệu.
     val context = LocalContext.current
@@ -53,6 +55,9 @@ fun HomeRoute(
             HomeScreen(
                 modifier = Modifier.fillMaxSize(),
                 shelves = shelves,
+                wordResults = searchResults,
+                onQueryChange = viewModel::onSearchQueryChange,
+                onWordClick = onOpenWord,
                 onAddClick = onAddBookcase,
                 onBookcaseClick = onOpenBookcase,
                 onBookcaseMenuClick = { dialog = HomeDialog.BookcaseActions(it) },

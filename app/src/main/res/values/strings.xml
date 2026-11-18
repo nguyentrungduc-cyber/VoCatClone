@@ -133,4 +133,16 @@
     <string name="ev_sending">Đang gửi lại email xác thực…</string>
     <string name="ev_sent">Đã gửi lại. Kiểm tra hộp thư của bạn.</string>
     <string name="ev_send_failed">Chưa gửi được. Kiểm tra mạng rồi thử lại.</string>
+    <string name="home_results_words">Từ vựng (%1$d)</string>
+    <string name="home_results_bookcases">Bộ từ vựng</string>
+    <string name="wf_image_source_title">Ảnh minh họa</string>
+    <string name="wf_image_camera">Chụp ảnh</string>
+    <string name="wf_image_gallery">Chọn từ thư viện</string>
+    <!-- Tra nghĩa bằng API dịch: các câu nhắc khi không xong -->
+    <string name="wf_lookup_no_network">Không có mạng nên chưa tra được nghĩa. Bạn vẫn gõ nghĩa tay được.</string>
+    <string name="wf_lookup_timeout">Tra nghĩa lâu quá nên đã dừng. Thử lại hoặc gõ nghĩa tay.</string>
+    <string name="wf_lookup_rate_limited">Dịch vụ dịch đang quá tải. Đợi một lát rồi thử lại.</string>
+    <string name="wf_lookup_no_result">Không tìm được nghĩa gợi ý cho từ này.</string>
+    <string name="wf_lookup_unsupported">Cặp ngôn ngữ của bộ từ vựng này chưa tra tự động được.</string>
+    <string name="wf_lookup_server">Dịch vụ dịch đang lỗi. Bạn vẫn gõ nghĩa tay được.</string>
 </resources>

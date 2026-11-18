@@ -73,6 +73,9 @@ dependencies {
     implementation(platform(libs.firebase.bom))
     implementation(libs.firebase.auth)
 
+    // Coil — hiển thị ảnh minh họa của từ vựng
+    implementation(libs.coil.compose)
+
     // Coroutines
     implementation(libs.kotlinx.coroutines.android)
 
