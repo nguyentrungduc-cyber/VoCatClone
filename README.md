@@ -1,6 +1,6 @@
 # VoCat Clone – Smart Vocabulary Learning App for Android
 
-Ứng dụng học từ vựng tiếng Anh thông minh cho Android, lấy cảm hứng từ VoCat. Người dùng có thể tạo bộ từ vựng theo chủ đề, ôn tập qua Flashcard / trắc nghiệm / chính tả, và theo dõi tiến độ học tập theo thời gian.
+Ứng dụng học từ vựng tiếng Anh thông minh cho Android, lấy cảm hứng từ VoCat. Người dùng có thể tạo bộ từ theo chủ đề, tra nghĩa tiếng Việt, thêm ảnh minh họa, tìm kiếm và đánh dấu từ đã thuộc.
 
 ## Giới thiệu
 
@@ -11,17 +11,19 @@ Dự án là bài tập nhóm môn Lập trình Mobile, xây dựng bằng **Kot
 ### Nhóm tính năng lõi (bắt buộc)
 - [x] Đăng ký / đăng nhập / quên mật khẩu bằng email (Firebase Authentication)
 - [x] Quản lý từ vựng: thêm / sửa / xóa / xem chi tiết (từ, nhiều nghĩa, phiên âm, loại từ, ví dụ, đồng nghĩa); chuyển từ sang bộ khác, đổi ngày tạo
-  - [ ] Ảnh minh họa (form đã có ô ảnh nhưng chưa nối chức năng chọn ảnh)
+- [x] Thêm ảnh minh họa cho từ bằng máy ảnh hoặc thư viện ảnh
 - [x] Phân loại từ vựng: tủ sách (bookshelf) → bộ từ (bookcase), có thêm / sửa / xóa
 - [x] Lưu trữ dữ liệu cục bộ bằng SQLite (Room), dữ liệu tách theo tài khoản
-- [ ] Gợi ý nghĩa từ tự động khi thêm từ mới (gọi API dịch/từ điển) — form đã có nút tra, chưa nối API
+- [x] Tra cứu gợi ý nghĩa tiếng Việt trong form thêm/sửa từ qua MyMemory (cần Internet)
+- [x] Tìm kiếm từ vựng từ tab **Vocabulary** hoặc trong bộ từ
 - [ ] Đọc phát âm từ vựng bằng Text-to-Speech
 
 ### Nhóm tính năng ôn tập (điểm nhấn)
 - [ ] Chế độ Flashcard (lật thẻ ghi nhớ)
 - [ ] Chế độ trắc nghiệm (Multiple choice)
 - [ ] Chế độ chính tả (Dictation — nghe và gõ lại từ)
-- [ ] Theo dõi tiến độ học — đã có đánh dấu đã thuộc / chưa thuộc; còn thiếu lịch sử ôn tập
+- [x] Đánh dấu từ đã thuộc / chưa thuộc
+- [ ] Theo dõi lịch sử ôn tập
 - [ ] Chế độ Blinker (quiz chớp nhoáng — từ xuất hiện/biến mất trong vài trăm ms, yêu cầu tối ưu hiệu năng UI real-time)
 - [ ] "Làm lại chỉ với các từ trả lời sai" sau mỗi lượt quiz (dùng chung cho mọi chế độ)
 
@@ -41,11 +43,11 @@ Dự án là bài tập nhóm môn Lập trình Mobile, xây dựng bằng **Kot
 | Kiến trúc | MVVM (Repository + ViewModel) |
 | Cơ sở dữ liệu cục bộ | Room (SQLite), sinh code bằng KSP |
 | Xác thực | Firebase Authentication (email/mật khẩu) |
+| Gợi ý nghĩa | MyMemory Translation API |
+| Hiển thị ảnh | Coil |
 | Điều hướng | Navigation Compose |
 | Bất đồng bộ | Kotlin Coroutines / Flow |
 | Build | Gradle 8.9 (Kotlin DSL, version catalog), AGP 8.6 |
-
-Dự kiến dùng thêm: Android TTS Engine (phát âm), API từ điển (gợi ý nghĩa).
 
 ## Hướng dẫn cài đặt
 
@@ -67,9 +69,9 @@ Dự kiến dùng thêm: Android TTS Engine (phát âm), API từ điển (gợi
    File > Open > chọn thư mục VoCatClone
    ```
 
-3. Đồng bộ Gradle (Android Studio sẽ tự động chạy, hoặc thủ công):
+3. Đồng bộ Gradle trong Android Studio. Để build bản debug từ terminal:
    ```bash
-   ./gradlew build
+   ./gradlew assembleDebug
    ```
 
 4. Chạy ứng dụng trên máy ảo (emulator) hoặc thiết bị thật:
@@ -77,6 +79,8 @@ Dự kiến dùng thêm: Android TTS Engine (phát âm), API từ điển (gợi
    ./gradlew installDebug
    ```
    Hoặc bấm nút **Run ▶** trong Android Studio.
+
+   Trên Windows PowerShell, dùng `.\gradlew.bat` thay cho `./gradlew` trong các lệnh Gradle.
 
 5. Chạy unit test:
    ```bash
@@ -90,15 +94,16 @@ Dự kiến dùng thêm: Android TTS Engine (phát âm), API từ điển (gợi
 
 ### Firebase
 
-File `app/google-services.json` của project Firebase `vocat-clone-nhom18` đã có sẵn trong repo, clone về là chạy được. App hiện chỉ dùng đăng nhập email/mật khẩu nên **không cần** thêm SHA-1. Chỉ khi bổ sung Google Sign-In mới phải thêm SHA-1 của debug keystore vào Firebase Console (lấy bằng `./gradlew signingReport`).
+File `app/google-services.json` của project Firebase `vocat-clone-nhom18` đã có sẵn trong repo. Nếu dùng dự án Firebase riêng, hãy bật phương thức Email/Password và thay file cấu hình bằng file của ứng dụng Android `com.vocatclone.app`. App hiện chỉ dùng đăng nhập email/mật khẩu nên **không cần** thêm SHA-1. Chỉ khi bổ sung Google Sign-In mới phải thêm SHA-1 của debug keystore vào Firebase Console (lấy bằng `./gradlew signingReport`).
 
 ## Cách sử dụng
 
 1. Mở ứng dụng: Splash → màn Welcome (chỉ lần đầu) → **Đăng nhập** hoặc **Đăng ký** bằng email
 2. Tab **Vocabulary**: tạo **bộ từ vựng** mới (ví dụ: "Từ vựng TOEIC Unit 1") trong tủ sách
-3. Mở bộ từ → thêm từ: nhập từ tiếng Anh, các nghĩa tiếng Việt, phiên âm, loại từ, ví dụ...
-4. Mở chi tiết từ để sửa, xóa, đánh dấu đã thuộc hoặc chuyển sang bộ khác
-5. Tab **My**: xem tài khoản, đăng xuất
+3. Mở bộ từ → thêm từ. Nhập từ tiếng Anh và các nghĩa tiếng Việt, hoặc dùng nút tra cứu để lấy gợi ý. Có thể bổ sung phiên âm, loại từ, ví dụ và ảnh minh họa.
+4. Tìm từ trong tab **Vocabulary** hoặc trong bộ từ.
+5. Mở chi tiết từ để sửa, xóa, đánh dấu đã thuộc hoặc chuyển sang bộ khác
+6. Tab **My**: xem tài khoản, đăng xuất
 
 Các tab **Add**, **Quiz**, **Calendar** hiện mới là placeholder. Ở bản debug, khi chưa có dữ liệu, tab Vocabulary có nút nạp dữ liệu mẫu.
 
@@ -112,7 +117,9 @@ app/src/main/java/com/vocatclone/app/
 │   │   ├── AppDatabase.kt   # Room database (singleton, version 3)
 │   │   ├── entity/          # Bookshelf, Bookcase, Word, WordMeaning (+ WordWithMeanings, BookcaseWordCount)
 │   │   └── dao/             # BookshelfDao, BookcaseDao, WordDao
-│   ├── repository/          # Auth, Bookshelf, Bookcase, Word repository; OwnershipGuard (kiểm tra quyền sở hữu theo uid)
+│   ├── image/               # Lưu ảnh từ vựng trong bộ nhớ riêng của ứng dụng
+│   ├── remote/              # Gọi MyMemory Translation API
+│   ├── repository/          # Các repository, gồm TranslationRepository, và OwnershipGuard
 │   └── seed/                # SampleData — dữ liệu mẫu cho bản debug
 └── ui/
     ├── navigation/          # Routes, AppNavHost (Splash → Welcome → Login/Register → Main)
