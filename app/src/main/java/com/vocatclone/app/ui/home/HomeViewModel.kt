@@ -4,6 +4,7 @@ import android.app.Application
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
 import com.vocatclone.app.data.local.AppDatabase
+import com.vocatclone.app.data.local.entity.WordWithMeanings
 import com.vocatclone.app.data.repository.AuthRepository
 import com.vocatclone.app.data.seed.SampleData
 import com.vocatclone.app.data.repository.BookcaseRepository
@@ -60,7 +61,7 @@ class HomeViewModel(application: Application) : AndroidViewModel(application) {
     val searchResults: StateFlow<List<WordSearchUi>> = auth.uidFlow
         .flatMapLatest { uid ->
             if (uid == null) {
-                flowOf(emptyList())
+                flowOf(emptyList<WordWithMeanings>())
             } else {
                 searchQuery
                     .debounce(SEARCH_DEBOUNCE_MS)

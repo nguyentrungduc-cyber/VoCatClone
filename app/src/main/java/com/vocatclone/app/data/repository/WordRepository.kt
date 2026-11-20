@@ -2,6 +2,7 @@ package com.vocatclone.app.data.repository
 
 import com.vocatclone.app.data.local.AppDatabase
 import com.vocatclone.app.data.local.entity.WordEntity
+import com.vocatclone.app.data.local.entity.WordWithMeanings
 import com.vocatclone.app.ui.bookcase.WordItemUi
 import com.vocatclone.app.ui.word.WordDetailUi
 import com.vocatclone.app.ui.word.WordFormValues
